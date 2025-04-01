@@ -14,6 +14,7 @@ import easyStep3 from '@/assets/easyStep/step3.png'
 import easyStep4 from '@/assets/easyStep/step4.png'
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
+import Footer from '../shared/Footer';
 const Home = () => {
     return (
         <main>
@@ -30,7 +31,7 @@ const Home = () => {
                 </section>
             </header>
             {/* featured section  */}
-            <section className='my-10 text-center'>
+            <section className='my-10 text-center border mx-16'>
                 <h1 className='text-4xl font-bold text-gray-800'>A Higher Standard</h1>
                 <div className='md:flex justify-center space-x-16 items-center my-10'>
                     <Card className='w-66 h-fit py-0'>
@@ -66,7 +67,7 @@ const Home = () => {
             </section>
 
             {/* choose meal and get start section  */}
-            <section className='lg:flex justify-center items-center mx-16'>
+            <section className='lg:flex justify-center items-center mx-16 border'>
 
                 <div className='text-center pr-6'>
 
@@ -127,6 +128,10 @@ const Home = () => {
                     </Card>
                 </div>
             </section>
+            {/* footer section  */}
+            <footer>
+                <Footer />
+            </footer>
         </main>
     );
 }
