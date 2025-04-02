@@ -15,6 +15,7 @@ import easyStep4 from '@/assets/easyStep/step4.png'
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import Footer from '../shared/Footer';
+import Link from 'next/link';
 const Home = () => {
     return (
         <main>
@@ -67,14 +68,16 @@ const Home = () => {
             </section>
 
             {/* choose meal and get start section  */}
-            <section className='lg:flex justify-center items-center mx-16 border'>
+            <section className='md:flex justify-center items-center mx-16 border'>
 
-                <div className='text-center pr-6'>
+                <div className='text-center pr-6 mb-6'>
 
                     <h1 className='text-4xl font-bold text-gray-800'>MEET YOUR HEALTH GOALS WITH THE #1 MEAL KIT FOR CLEAN EATING</h1>
-                    <p className='text-gray-800'>Supports healthy weight management & whole body health.</p>
+                    <p className='text-gray-800 mb-10'>Supports healthy weight management & whole body health.</p>
+                    <Link href='/make-plan'
+                        className=" bg-green-800 px-10 pt-1 pb-2 rounded-3xl text-white">get start</Link>
                 </div>
-                <div className=''>
+                <div className='sm:block hidden '>
                     <Image src={banner2} alt='banner 2' width={800} height={100} className='h-[600px]' />
                 </div>
             </section>
@@ -129,7 +132,7 @@ const Home = () => {
                 </div>
             </section>
             {/* footer section  */}
-            <footer>
+            <footer className='border'>
                 <Footer />
             </footer>
         </main>

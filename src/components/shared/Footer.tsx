@@ -31,7 +31,7 @@ const Footer = () => {
 
                             <li>Accessibility Support</li>
                         </ul>
-                        <ul className='ml-10'>
+                        <ul className='md:ml-10'>
                             <li>Nutrition & Fitness</li>
                             <li>Meals</li>
                             <li>Testimonials</li>
@@ -53,7 +53,7 @@ const Footer = () => {
             </section>
             {/* social link and terms  */}
             <section className='my-8 text-gray-700 text-sm md:flex justify-between items-center'>
-                <div>
+                <div className=''>
                     <p>
                         <Link href="/">Privacy Policy</Link> | <Link href="/">Cookie Notice</Link> | <Link href="/">Your California Privacy Rights</Link> | <Link href="/">Do Not Sell My Personal Information</Link>
                     </p>
@@ -61,13 +61,11 @@ const Footer = () => {
                         &copy; Copyright 2025 Trifecta Inc. All rights reserved | <Link href="/">Terms of Service</Link> | <Link href="/">FAQ</Link>
                     </p>
                 </div>
-                <div className='flex justify-center items-center'>
-                    <BsInstagram size={40} className='mx-4' />
-                    <FaXTwitter size={40} className='mx-4' />
-                    <LuFacebook size={40} className='mx-4' />
-                    <FiYoutube size={40} className='mx-4' />
-
-
+                <div className=' flex justify-center items-center my-6 sm:my-0'>
+                    <Link href="/"> <BsInstagram size={40} className='mx-4' /></Link>
+                    <Link href="/"><FaXTwitter size={40} className='mx-4' /></Link>
+                    <Link href="/"><LuFacebook size={40} className='mx-4' /></Link>
+                    <Link href="/"><FiYoutube size={40} className='mx-4' /></Link>
                 </div>
             </section>
         </div>
