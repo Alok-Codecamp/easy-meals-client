@@ -1,20 +1,29 @@
 "use client"
+import { logOut, selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { use, useEffect, useRef, useState } from "react";
 import { HiBars3BottomRight } from "react-icons/hi2";
 import { IoIosSearch } from "react-icons/io";
 
 const NavBar = () => {
     const [open, setOpen] = useState(false)
     const [isAnimating, setIsAnimating] = useState(false);
-
+    const user = useAppSelector(selectCurrentUser);
+    const dispatch = useAppDispatch();
+    const router = useRouter();
     useEffect(() => {
         if (open) {
             setIsAnimating(true); // Start animation when sidebar opens
         }
     }, [open]);
 
+    const handleLogOut = () => {
+        dispatch(logOut())
+        router.push('/login')
+    }
 
     return (
         <nav className="py-2 md:py-6 md:shadow-sm">
@@ -49,12 +58,21 @@ const NavBar = () => {
                         rounded-3xl 
                         mr-2 text-white"
                     >get start</Link>
-                    <Link href='/login'
-                        className="bg-green-800 px-6 pt-1 pb-2 
+                    {
+                        user ? <button
+                            onClick={handleLogOut}
+                            className="bg-green-800 px-6 pt-1 pb-2 
                         rounded-3xl 
                         ml-2
                         text-white"
-                    >Login</Link>
+                        >Logout</button>
+                            : <Link href='/login'
+                                className="bg-green-800 px-6 pt-1 pb-2 
+                        rounded-3xl 
+                        ml-2
+                        text-white"
+                            >Login</Link>
+                    }
                 </div>
                 <button className="lg:hidden cursor-pointer hover:bg-gray-300 rounded-md" onClick={() => setOpen(!open)}>
                     <HiBars3BottomRight size={36} />
@@ -77,13 +95,23 @@ const NavBar = () => {
                         <li className="my-4">About Us</li>
                         <li className="my-4">Reviews</li>
                         <li className="my-4">FAQs</li>
-                        <li className="my-4"> <Link href='/login'
-                            className="bg-green-800 px-4 pt-0.5 pb-1
+                        <li className="my-4">
+                            {
+                                user ? <button
+                                    onClick={handleLogOut}
+                                    className="bg-green-800 px-6 pt-1 pb-2 
+                         rounded-3xl 
+                         ml-2
+                         text-white"
+                                >Logout</button> : <Link href='/login'
+                                    className="bg-green-800 px-4 pt-0.5 pb-1
                              
                         rounded-3xl 
                         
                         text-white"
-                        >Login</Link></li>
+                                >Login</Link>
+                            }
+                        </li>
                     </ul>
                 </section>
                 )}
