@@ -10,6 +10,7 @@ import { selectCurrentUser, setUser } from '@/redux/features/auth/authSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import verifyToken from '@/utils/verifyToken';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 type FormValue = {
     contact: string;
@@ -25,12 +26,14 @@ const Page = () => {
         formState: { errors }
     } = useForm<FormValue>();
     const onSumbimt: SubmitHandler<FormValue> = async (data) => {
-        console.log(user);
+        const toastId = toast.loading('login in...')
         const userData = await loginUser(data);
+        console.log(userData);
         const userInfo = verifyToken(userData.data.accessToken)
         console.log(userInfo);
 
         if (userInfo) {
+            toast.success('Login successfully', { id: toastId })
             dispatch(setUser({ user: userInfo, token: userData.data.accessToken }))
         }
 

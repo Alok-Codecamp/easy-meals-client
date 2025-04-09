@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "@/lib";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor } from "@/redux/store";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,14 +29,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Providers>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased custom-scrollbar`}
-        >
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased custom-scrollbar`}
+      >
+        <Providers>
+
           {children}
-        </body>
-      </html>
-    </Providers>
+
+        </Providers>
+      </body>
+    </html>
+
+
   );
 }
