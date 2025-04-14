@@ -32,7 +32,12 @@ const NavBar = () => {
                 {/* nav Items  */}
                 <div className="flex justify-center items-center space-x-12">
                     <Link className="border " href='/'>
-                        <Image src="/logo.png" alt="logo" height={100} width={200} />
+                        <Image src="/logo.png"
+                            alt="logo"
+                            width={200}
+                            height={0}
+                            sizes="100vw"
+                        />
                     </Link>
                     <ul className="hidden lg:flex space-x-6">
                         <li><Link href='weekly-menu'>Weekly Menu</Link></li>
