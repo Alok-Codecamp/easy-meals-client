@@ -9,10 +9,12 @@ import { Toaster } from "sonner";
 
 
 persistStore(store);
-export default function Providers({
+const Providers = ({
     children,
 }: {
     children: React.ReactNode;
-}) {
+}) => {
     return <Provider store={store}>{children}</Provider>;
 }
+
+export default Providers;

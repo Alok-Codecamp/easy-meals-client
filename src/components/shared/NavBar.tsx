@@ -35,11 +35,16 @@ const NavBar = () => {
                         <Image src="/logo.png" alt="logo" height={100} width={200} />
                     </Link>
                     <ul className="hidden lg:flex space-x-6">
-                        <li>Weekly Menu</li>
-                        <li>Plans</li>
-                        <li>About Us</li>
-                        <li>Reviews</li>
-                        <li>FAQs</li>
+                        <li><Link href='weekly-menu'>Weekly Menu</Link></li>
+                        <li><Link href={'plan'}>Plans</Link></li>
+                        <li><Link href={'about-us'}>About Us</Link></li>
+                        {/* <li>Reviews</li>
+                        <li>FAQs</li> */}
+                        <li>
+                            {
+                                user ? <Link href={'/dashboard'}>Dashboard</Link> : <></>
+                            }
+                        </li>
                     </ul>
                 </div>
                 {/* search and Login  */}
@@ -52,7 +57,7 @@ const NavBar = () => {
                         <IoIosSearch className="inline -ml-14" color="Gray" />
 
                     </div>
-                    <Link href='/make-plan'
+                    <Link href='/select-a-plan'
                         className="bg-green-800 px-10 
                         pt-1 pb-2 
                         rounded-3xl 
@@ -61,10 +66,12 @@ const NavBar = () => {
                     {
                         user ? <button
                             onClick={handleLogOut}
-                            className="bg-green-800 px-6 pt-1 pb-2 
+                            className="bg-red-800 px-6 pt-1 pb-2 
                         rounded-3xl 
                         ml-2
-                        text-white"
+                        text-white
+                        cursor-pointer
+                        "
                         >Logout</button>
                             : <Link href='/login'
                                 className="bg-green-800 px-6 pt-1 pb-2 
@@ -99,17 +106,15 @@ const NavBar = () => {
                             {
                                 user ? <button
                                     onClick={handleLogOut}
-                                    className="bg-green-800 px-6 pt-1 pb-2 
+                                    className="bg-red-800 px-6 pt-1 pb-2 
                          rounded-3xl 
                          ml-2
-                         text-white"
-                                >Logout</button> : <Link href='/login'
-                                    className="bg-green-800 px-4 pt-0.5 pb-1
-                             
-                        rounded-3xl 
-                        
-                        text-white"
-                                >Login</Link>
+                         text-white
+                         cursor-pointer
+                         ">Logout</button>
+                                    :
+                                    <Link href='/login'
+                                        className="bg-green-800 px-4 pt-0.5 pb-1 rounded-3xl text-white">Login</Link>
                             }
                         </li>
                     </ul>

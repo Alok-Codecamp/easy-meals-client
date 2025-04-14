@@ -5,9 +5,9 @@ import { ApiError } from "next/dist/server/api-utils";
 
 
 
-
+// https://easy-meals-server.onrender.com
 const baseQuery = fetchBaseQuery({
-    baseUrl: 'https://easy-meals-server.onrender.com',
+    baseUrl: 'http://localhost:5000',
     credentials: 'include',
     prepareHeaders: (headers, { getState }) => {
         const token = (getState() as RootState).auth.token;
@@ -20,17 +20,19 @@ const baseQuery = fetchBaseQuery({
 })
 
 const baseQueryWithRefreshToken: BaseQueryFn<FetchArgs, BaseQueryApi, DefinitionType> = async (args, api, extraOptions): Promise<any> => {
-    let result = baseQuery(args, api, extraOptions);
-
+    let result = await baseQuery(args, api, extraOptions);
+    console.log(result);
+    // https://easy-meals-server.onrender.com
     if ((result as any)?.error?.status === 500) {
-        const res = await fetch('https://easy-meals-server.onrender.com/auth/refresh', {
+        const res = await fetch('http://localhost:5000/auth/refresh', {
             method: 'POST',
             credentials: 'include'
         });
 
         const data = await res.json();
 
-        if (data) {
+        if (data.success) {
+            console.log(data);
             const user = (api.getState() as RootState).auth.user;
             api.dispatch(setUser({
                 user,
