@@ -1,14 +1,14 @@
 
 
 
-const dashboardHomePage = () => {
-    return (
-        <div>
-            hello dashboard
-        </div>
-    )
-}
+// const dashboardHomePage = () => {
+//     return (
+//         <div>
+//             hello dashboard
+//         </div>
+//     )
+// }
 
 
-export default dashboardHomePage;
+// export default dashboardHomePage;
 

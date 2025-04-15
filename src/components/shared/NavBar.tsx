@@ -1,15 +1,26 @@
-"use client"
+"use client";
 import { logOut, selectCurrentUser } from "@/redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { HiBars3BottomRight } from "react-icons/hi2";
 import { IoIosSearch } from "react-icons/io";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import avatar from '@/assets/selectMeals/clean-meal.png'
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { deleteCoockies } from "@/services/auth/auth";
 
 const NavBar = () => {
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
     const user = useAppSelector(selectCurrentUser);
     const dispatch = useAppDispatch();
@@ -20,10 +31,11 @@ const NavBar = () => {
         }
     }, [open]);
 
-    const handleLogOut = () => {
-        dispatch(logOut())
-        router.push('/login')
-    }
+    const handleLogOut = async () => {
+        dispatch(logOut());
+        await deleteCoockies();
+        router.push("/login");
+    };
 
     return (
         <nav className="py-2 md:py-6 md:shadow-sm">
@@ -31,8 +43,9 @@ const NavBar = () => {
             <section className="container mx-auto px-2  flex justify-between items-center">
                 {/* nav Items  */}
                 <div className="flex justify-center items-center space-x-12">
-                    <Link className="border " href='/'>
-                        <Image src="/logo.png"
+                    <Link className="border " href="/">
+                        <Image
+                            src="/logo.png"
                             alt="logo"
                             width={200}
                             height={0}
@@ -40,35 +53,46 @@ const NavBar = () => {
                         />
                     </Link>
                     <ul className="hidden lg:flex space-x-6">
-                        <li><Link href='weekly-menu'>Weekly Menu</Link></li>
-                        <li><Link href={'plan'}>Plans</Link></li>
-                        <li><Link href={'about-us'}>About Us</Link></li>
+                        <li>
+                            <Link href="weekly-menu">Weekly Menu</Link>
+                        </li>
+                        <li>
+                            <Link href={"plan"}>Plans</Link>
+                        </li>
+                        <li>
+                            <Link href={"about-us"}>About Us</Link>
+                        </li>
                         {/* <li>Reviews</li>
                         <li>FAQs</li> */}
                         <li>
                             {
-                                user ? <Link href={'/dashboard'}>Dashboard</Link> : <></>
+                                user && <Link href={"/dashboard"}>Dashboard</Link>
                             }
                         </li>
+
                     </ul>
                 </div>
                 {/* search and Login  */}
-                <div className="hidden lg:flex justify-center items-center" >
+                <div className="hidden lg:flex justify-center items-center">
                     <div className="mr-12">
                         <input
                             className="border border-gray-300 rounded-3xl 
                         px-2 py-1 mr-6"
-                            type="text" placeholder="Search Meals" />
+                            type="text"
+                            placeholder="Search Meals"
+                        />
                         <IoIosSearch className="inline -ml-14" color="Gray" />
-
                     </div>
-                    <Link href='/select-a-plan'
+                    <Link
+                        href="/select-a-plan"
                         className="bg-green-800 px-10 
                         pt-1 pb-2 
                         rounded-3xl 
                         mr-2 text-white"
-                    >get start</Link>
-                    {
+                    >
+                        get start
+                    </Link>
+                    {/* {
                         user ? <button
                             onClick={handleLogOut}
                             className="bg-red-800 px-6 pt-1 pb-2 
@@ -84,22 +108,64 @@ const NavBar = () => {
                         ml-2
                         text-white"
                             >Login</Link>
-                    }
+                    } */}
+
+                    {user ? (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger>
+                                <Avatar>
+                                    <AvatarImage src="https://github.com/shadcn.png" />
+                                    <AvatarFallback>AB</AvatarFallback>
+                                </Avatar>
+
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>Profile</DropdownMenuItem>
+                                <DropdownMenuItem>Billing</DropdownMenuItem>
+                                <DropdownMenuItem>Team</DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>
+                                    <button onClick={handleLogOut} className="bg-red-800 px-6 pt-1 pb-2 rounded-3xl ml-2 text-white cursor-pointer">Logout</button>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    ) : (
+                        <Link
+                            href="/login"
+                            className="bg-green-800 px-6 pt-1 pb-2 
+                    rounded-3xl 
+                    ml-2
+                    text-white"
+                        >
+                            Login
+                        </Link>
+                    )}
                 </div>
-                <button className="lg:hidden cursor-pointer hover:bg-gray-300 rounded-md" onClick={() => setOpen(!open)}>
+                <button
+                    className="lg:hidden cursor-pointer hover:bg-gray-300 rounded-md"
+                    onClick={() => setOpen(!open)}
+                >
                     <HiBars3BottomRight size={36} />
                 </button>
             </section>
             {/* mobile menu  */}
-            {
-                open && (<section className={`lg:hidden bg-gray-200 shadow-sm text-left w-80 px-4 py-16 h-full fixed right-0 z-10
+            {open && (
+                <section
+                    className={`lg:hidden bg-gray-200 shadow-sm text-left w-80 px-4 py-16 h-full fixed right-0 z-10
                  
-          ${(open) ? "animate-in slide-in-from-right" : "animate-out slide-out-to-right"}`}
-
+          ${open
+                            ? "animate-in slide-in-from-right"
+                            : "animate-out slide-out-to-right"
+                        }`}
                 >
                     <div className="">
-                        <input className="border border-gray-400 rounded-2xl px-2 py-1" type="text" placeholder="Search Meals" />
-
+                        <input
+                            className="border border-gray-400 rounded-2xl px-2 py-1"
+                            type="text"
+                            placeholder="Search Meals"
+                        />
                     </div>
                     <ul className=" text-xl ">
                         <li className="my-4">Weekly Meny</li>
@@ -108,26 +174,37 @@ const NavBar = () => {
                         <li className="my-4">Reviews</li>
                         <li className="my-4">FAQs</li>
                         <li className="my-4">
-                            {
-                                user ? <button
-                                    onClick={handleLogOut}
-                                    className="bg-red-800 px-6 pt-1 pb-2 
-                         rounded-3xl 
-                         ml-2
-                         text-white
-                         cursor-pointer
-                         ">Logout</button>
-                                    :
-                                    <Link href='/login'
-                                        className="bg-green-800 px-4 pt-0.5 pb-1 rounded-3xl text-white">Login</Link>
-                            }
+                            {user ? (
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem>Profile</DropdownMenuItem>
+                                        <DropdownMenuItem>Billing</DropdownMenuItem>
+                                        <DropdownMenuItem>Team</DropdownMenuItem>
+                                        <DropdownMenuItem>Subscription</DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            ) : (
+                                <Link
+                                    href="/login"
+                                    className="bg-green-800 px-4 pt-0.5 pb-1 rounded-3xl text-white"
+                                >
+                                    Login
+                                </Link>
+                            )}
                         </li>
                     </ul>
                 </section>
-                )}
+            )}
         </nav>
-    )
+    );
+};
+{
+    /* <button onClick={handleLogOut}
+   className="bg-red-800 px-6 pt-1 pb-2 
+   rounded-3xl ml-2 text-white cursor-pointer">Logout</button> */
 }
-
 
 export default NavBar;
