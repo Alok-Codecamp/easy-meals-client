@@ -1,5 +1,6 @@
 "use server"
 
+import { DecodedUser } from "@/types/auth.types";
 import verifyToken from "@/utils/verifyToken";
 import { cookies } from "next/headers";
 import { json } from "stream/consumers";
@@ -11,7 +12,7 @@ type LoginData = {
 }
 
 export const loginUser = async (data: LoginData) => {
-    const res = await fetch('https://easy-meals-server.onrender.com/auth/login', {
+    const res = await fetch('http://localhost:5000/auth/login', {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
@@ -34,7 +35,7 @@ export const getCurrentUser = async () => {
 
     if (tokenCookie?.value) {
         const decodedData = verifyToken(tokenCookie.value);
-        return decodedData;
+        return decodedData as DecodedUser;
     }
 
     return null;

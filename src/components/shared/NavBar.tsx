@@ -3,7 +3,7 @@ import { logOut, selectCurrentUser } from "@/redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { HiBars3BottomRight } from "react-icons/hi2";
 import { IoIosSearch } from "react-icons/io";
@@ -18,12 +18,15 @@ import {
 import avatar from '@/assets/selectMeals/clean-meal.png'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { deleteCoockies } from "@/services/auth/auth";
+import { prodetectedRoutes } from "@/constants";
+import { DecodedUser } from "@/types/auth.types";
 
 const NavBar = () => {
     const [open, setOpen] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
-    const user = useAppSelector(selectCurrentUser);
+    const user = useAppSelector(selectCurrentUser) as DecodedUser;
     const dispatch = useAppDispatch();
+    const pathname = usePathname();
     const router = useRouter();
     useEffect(() => {
         if (open) {
@@ -34,7 +37,11 @@ const NavBar = () => {
     const handleLogOut = async () => {
         dispatch(logOut());
         await deleteCoockies();
-        router.push("/login");
+
+        if (prodetectedRoutes.some((route) => pathname.match(route))) {
+            router.push('/')
+        }
+
     };
 
     return (
@@ -66,7 +73,7 @@ const NavBar = () => {
                         <li>FAQs</li> */}
                         <li>
                             {
-                                user && <Link href={"/dashboard"}>Dashboard</Link>
+                                user && <Link href={`/dashboard/${user?.role}`}>Dashboard</Link>
                             }
                         </li>
 
@@ -92,24 +99,6 @@ const NavBar = () => {
                     >
                         get start
                     </Link>
-                    {/* {
-                        user ? <button
-                            onClick={handleLogOut}
-                            className="bg-red-800 px-6 pt-1 pb-2 
-                        rounded-3xl 
-                        ml-2
-                        text-white
-                        cursor-pointer
-                        "
-                        >Logout</button>
-                            : <Link href='/login'
-                                className="bg-green-800 px-6 pt-1 pb-2 
-                        rounded-3xl 
-                        ml-2
-                        text-white"
-                            >Login</Link>
-                    } */}
-
                     {user ? (
                         <DropdownMenu>
                             <DropdownMenuTrigger>

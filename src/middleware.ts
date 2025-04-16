@@ -8,7 +8,7 @@ import { getCurrentUser } from "./services/auth/auth"
 
 const authRoutes = ["/login", "/register"]
 const roleBaseAccess = {
-    customer: [/^\/customer/, /^\/dashboard/],
+    customer: [/^\/customer/, /^\/dashboard/, /^\/select-a-plan/],
     mealProvider: [/^\/mealProvider/]
 }
 
@@ -43,5 +43,6 @@ export const config = {
         "/customer/:page",
         "/mealProvider",
         "/mealProvider/:page",
+        "/select-a-plan"
     ]
 }
