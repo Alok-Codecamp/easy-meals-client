@@ -1,4 +1,4 @@
-// "use client"
+"use client"
 
 import { AppSidebar } from "@/components/dashboard/app-sidebar"
 import { Separator } from "@/components/ui/separator"
@@ -9,15 +9,13 @@ import {
 } from "@/components/ui/sidebar"
 import { selectCurrentUser } from "@/redux/features/auth/authSlice"
 import { useAppSelector } from "@/redux/hooks"
-import { getCurrentUser } from "@/services/auth/auth"
 import { DecodedUser } from "@/types/auth.types"
 import { usePathname } from "next/navigation"
 import { ReactNode } from "react"
 
-export default async function DashboardLayout({ children }: { children: ReactNode }) {
-    // const userInfo = useAppSelector(selectCurrentUser) as DecodedUser;
-    // const pathname = usePathname();
-    const userInfo = await getCurrentUser();
+export default function DashboardLayout({ children }: { children: ReactNode }) {
+    const userInfo = useAppSelector(selectCurrentUser) as DecodedUser;
+
     return (
         <SidebarProvider>
             <AppSidebar user={userInfo} />
@@ -29,23 +27,12 @@ export default async function DashboardLayout({ children }: { children: ReactNod
                         <h1>NavBar</h1>
                     </div>
                 </header>
-                <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-                    {
-                        userInfo?.role === 'customer' ? <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                            <div className="aspect-video rounded-xl bg-green-800">Select Meal Plan</div>
-                            <div className="aspect-video rounded-xl bg-green-800" >Track Order</div>
-                            <div className="aspect-video rounded-xl bg-green-800" >Manage Preferance</div>
-                        </div> :
-                            <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                                <div className="aspect-video rounded-xl bg-green-800">Manage Meal Menus</div>
-                                <div className="aspect-video rounded-xl bg-green-800" >Response to Customer Order</div>
-                                <div className="aspect-video rounded-xl bg-green-800" >Tracking Delevery</div>
-                            </div>
-                    }
-                    <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" >
-                        {children}
-                    </div>
+
+
+                <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" >
+                    {children}
                 </div>
+
             </SidebarInset>
         </SidebarProvider>
     )

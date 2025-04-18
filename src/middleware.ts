@@ -8,14 +8,14 @@ import { getCurrentUser } from "./services/auth/auth"
 
 const authRoutes = ["/login", "/register"]
 const roleBaseAccess = {
-    customer: [/^\/customer/, /^\/dashboard/, /^\/select-a-plan/],
-    mealProvider: [/^\/mealProvider/]
+    customer: [/^\/dashboard/, /^\/select-a-plan/],
+    mealProvider: [/^\/dashboard/,]
 }
 
 export const middleware = async (request: NextRequest) => {
     const { pathname } = request.nextUrl;
     const userInfo = await getCurrentUser();
-    console.log(userInfo);
+    console.log('from middleware', userInfo);
 
     if (!userInfo) {
         if (authRoutes.includes(pathname)) {
@@ -28,21 +28,28 @@ export const middleware = async (request: NextRequest) => {
 
     if (userInfo?.role && roleBaseAccess[userInfo?.role]) {
         const routes = roleBaseAccess[userInfo?.role]
-        if (routes.some((route) => pathname.match(route))) {
-            return NextResponse.next()
+
+        if (routes.some((route) => {
+            return pathname.match(route)
+        })) {
+            if (pathname.startsWith('/dashboard/provider') && userInfo.role !== 'mealProvider') {
+                return NextResponse.redirect(new URL('/', request.url));
+            }
+            else if (pathname.startsWith('/dashboard/customer') && userInfo.role !== 'customer') {
+                return NextResponse.redirect(new URL('/', request.url));
+            }
+            else {
+                return NextResponse.next()
+            }
+
         }
     }
     return NextResponse.redirect(new URL('/', request.url))
 }
 
-
 export const config = {
     matcher: [
-        "/dashboard",
-        "/customer",
-        "/customer/:page",
-        "/mealProvider",
-        "/mealProvider/:page",
-        "/select-a-plan"
+        "/dashboard/:path*",
+        "/select-a-plan",
     ]
 }

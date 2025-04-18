@@ -93,4 +93,59 @@ export const CustomerNavMenuItem = [
         ],
     },
 
+]
+
+// meal provider menu item 
+
+export const providerNavMenuItem = [
+    {
+        title: "Manage Menus",
+        baseUrl: "/provider",
+        icon: GiMeal,
+        isActive: true,
+        items: [
+            {
+                title: 'Create Meal',
+                url: 'create-meal'
+            },
+            {
+                title: 'Update Meal',
+                url: 'update-meal'
+            }
+        ],
+    },
+    {
+        title: "Manage Orders",
+        baseUrl: "/provider",
+        icon: BsCartCheckFill,
+        items: [
+            {
+                title: "All Orders",
+                url: "all-orders",
+            },
+            {
+                title: "Confirm Orders",
+                url: "confirm-orders",
+            },
+
+
+        ]
+    },
+    {
+        title: "Manage Profile",
+        baseUrl: "/profile",
+        icon: BsCartCheckFill,
+        items: [
+            {
+                title: "Profile",
+                url: "provider",
+            },
+            // {
+            //     title: "Change Password",
+            //     url: "change-password",
+            // },
+
+
+        ]
+    },
 ] 

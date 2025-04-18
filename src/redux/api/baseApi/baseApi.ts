@@ -1,7 +1,7 @@
 import { logOut, setUser } from "@/redux/features/auth/authSlice";
 import { RootState } from "@/redux/store";
 import { BaseQueryApi, DefinitionType, createApi, FetchArgs, fetchBaseQuery, BaseQueryFn, FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
-import { ApiError } from "next/dist/server/api-utils";
+
 
 
 
@@ -32,7 +32,6 @@ const baseQueryWithRefreshToken: BaseQueryFn<FetchArgs, BaseQueryApi, Definition
         const data = await res.json();
 
         if (data.success) {
-            console.log(data);
             const user = (api.getState() as RootState).auth.user;
             api.dispatch(setUser({
                 user,

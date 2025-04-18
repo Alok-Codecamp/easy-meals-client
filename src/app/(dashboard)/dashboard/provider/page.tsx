@@ -3,7 +3,7 @@
 const ProviderPage = () => {
     return (
         <div>
-            provider
+            
         </div>
     );
 }

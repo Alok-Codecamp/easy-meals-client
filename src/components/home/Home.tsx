@@ -1,4 +1,3 @@
-import React from 'react';
 import NavBar from '../shared/NavBar';
 import Image from 'next/image';
 import bannerDesktop from '@/assets/banner-desktop.png';
@@ -13,7 +12,7 @@ import easyStep2 from '@/assets/easyStep/step2.png'
 import easyStep3 from '@/assets/easyStep/step3.png'
 import easyStep4 from '@/assets/easyStep/step4.png'
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import Footer from '../shared/Footer';
 import Link from 'next/link';
 const Home = () => {

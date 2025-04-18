@@ -21,12 +21,14 @@ export const loginUser = async (data: LoginData) => {
         cache: "no-store",
     });
     const serverResponse = await res.json();
-    console.log(serverResponse);
     if (serverResponse?.success) {
         const token = serverResponse.data.accessToken;
-        (await cookies()).set('accessToken', token);
+        (await cookies()).set('accessToken', token)
     }
     return serverResponse;
+}
+export const setCurrentUserInCoockies = async (token: string) => {
+    (await cookies()).set('accessToken', token)
 }
 
 export const getCurrentUser = async () => {

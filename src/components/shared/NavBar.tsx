@@ -20,6 +20,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { deleteCoockies } from "@/services/auth/auth";
 import { prodetectedRoutes } from "@/constants";
 import { DecodedUser } from "@/types/auth.types";
+import { Button } from "../ui/button";
 
 const NavBar = () => {
     const [open, setOpen] = useState(false);
@@ -61,19 +62,23 @@ const NavBar = () => {
                     </Link>
                     <ul className="hidden lg:flex space-x-6">
                         <li>
-                            <Link href="weekly-menu">Weekly Menu</Link>
+                            <Link href="dashboard/customer">Meals</Link>
                         </li>
                         <li>
-                            <Link href={"plan"}>Plans</Link>
+                            <Link href='our-cehfs'>Our Chefs</Link>
                         </li>
                         <li>
                             <Link href={"about-us"}>About Us</Link>
                         </li>
+                        <li>
+                            <button>For meal provider</button>
+                        </li>
+
                         {/* <li>Reviews</li>
                         <li>FAQs</li> */}
                         <li>
                             {
-                                user && <Link href={`/dashboard/${user?.role}`}>Dashboard</Link>
+                                user && <Link href={user?.role === "mealProvider" ? '/dashboard/provider' : '/dashboard/customer'}>Dashboard</Link>
                             }
                         </li>
 
@@ -90,15 +95,15 @@ const NavBar = () => {
                         />
                         <IoIosSearch className="inline -ml-14" color="Gray" />
                     </div>
-                    <Link
+                    {/* <Link
                         href="/select-a-plan"
                         className="bg-green-800 px-10 
                         pt-1 pb-2 
                         rounded-3xl 
                         mr-2 text-white"
                     >
-                        get start
-                    </Link>
+                        Become a meal Provider
+                    </Link> */}
                     {user ? (
                         <DropdownMenu>
                             <DropdownMenuTrigger>
@@ -111,7 +116,7 @@ const NavBar = () => {
                             <DropdownMenuContent>
                                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem>Profile</DropdownMenuItem>
+                                <DropdownMenuItem><Link href={user?.role === 'mealProvider' ? '/profile/provider' : '/profile/customer'}>Profile</Link></DropdownMenuItem>
                                 <DropdownMenuItem>Billing</DropdownMenuItem>
                                 <DropdownMenuItem>Team</DropdownMenuItem>
                                 <DropdownMenuSeparator />
@@ -128,7 +133,7 @@ const NavBar = () => {
                     ml-2
                     text-white"
                         >
-                            Login
+                            Sign In/Sign Up
                         </Link>
                     )}
                 </div>

@@ -27,8 +27,8 @@ import {
     useSidebar,
 } from "@/components/ui/sidebar"
 import { DecodedUser } from "@/types/auth.types"
-import { useAppDispatch } from "@/redux/hooks";
-import { logOut } from "@/redux/features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { logOut, selectCurrentUser } from "@/redux/features/auth/authSlice";
 import { deleteCoockies } from "@/services/auth/auth";
 import { prodetectedRoutes } from "@/constants";
 import { usePathname, useRouter } from "next/navigation";
@@ -45,6 +45,7 @@ export function NavUser({
     const dispatch = useAppDispatch();
     const pathname = usePathname();
     const router = useRouter();
+    const userInfo = useAppSelector(selectCurrentUser) as DecodedUser;
     const handleLogOut = async () => {
         dispatch(logOut());
         await deleteCoockies();
@@ -97,7 +98,7 @@ export function NavUser({
                         <DropdownMenuGroup>
                             <DropdownMenuItem>
                                 <CgProfile />
-                                <Link href="/profile">Profile</Link>
+                                <Link href={userInfo?.role === "mealProvider" ? '/profile/provider' : '/profile/customer'}>Profile</Link>
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />

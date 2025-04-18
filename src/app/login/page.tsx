@@ -13,15 +13,18 @@ import NavBar from '@/components/shared/NavBar';
 import { loginValidationSchema } from './loginValidation';
 import { zodResolver } from '@hookform/resolvers/zod'
 import z from 'zod';
-import { loginUser } from '@/services/auth/auth';
+import { loginUser, setCurrentUserInCoockies } from '@/services/auth/auth';
+import { DecodedUser } from '@/types/auth.types';
+import { useLoginMutation } from '@/redux/features/auth/authApi';
+import { cookies } from 'next/headers';
 
 type FormValue = z.infer<typeof loginValidationSchema>
 
 
 const LoginPage = () => {
-    const [isError, setIsError] = useState('');
+    const [login, { isLoading, isError }] = useLoginMutation();
     const dispatch = useAppDispatch();
-    const user = useAppSelector(selectCurrentUser)
+    // const user = useAppSelector(selectCurrentUser) as DecodedUser;
 
     const searchParams = useSearchParams();
     const redirect = searchParams.get("redirectPath")
@@ -32,28 +35,31 @@ const LoginPage = () => {
         handleSubmit,
         formState: { errors, isSubmitting }
     } = useForm<FormValue>({ resolver: zodResolver(loginValidationSchema) });
-    console.log(errors);
+
     const onSumbimt: SubmitHandler<FormValue> = async (data) => {
-        const toastId = toast.loading('login processing...')
+        const toastId = toast.loading('loging in...')
         try {
 
-            const userData = await loginUser(data);
-            if (userData?.success) {
-                const token = userData?.data?.accessToken;
-                const userInfo = verifyToken(token)
-                dispatch(setUser({ user: userInfo, token: token }))
-                toast.success('Login successfully', { id: toastId })
+            const userData = await login(data);
+            if (userData?.data) {
+                const token = userData?.data?.data?.accessToken;
+                const userInfo = verifyToken(token);
+                dispatch(setUser({ user: userInfo, token: token }));
+                await setCurrentUserInCoockies(token)
+                toast.success('Login successfully', { id: toastId });
+
                 if (redirect) {
                     router.push(redirect)
                 } else {
-                    router.push('/profile')
+                    console.log(userInfo?.role);
+                    router.push(`/profile/${userInfo?.role === 'mealProvider' ? 'provider' : 'customer'}`)
                 }
             } else {
-                setIsError(userData?.message)
-                toast.error(` login faild for ${isError}`, { id: toastId })
+                toast.error(`login faild `, { id: toastId })
             }
         } catch (err: any) {
-            toast.error(isError || 'Something went wrong', { id: toastId });
+            console.log(err);
+            toast.error('Something went wrong', { id: toastId });
         }
     }
 

@@ -13,18 +13,13 @@ import { NavProjects } from "../dashboard/nav-projects";
 import { NavUser } from "../dashboard/nav-user";
 import { DecodedUser } from "@/types/auth.types";
 import { GiMeal } from "react-icons/gi";
-import { CustomerNavMenuItem, NavMenuItem } from "./constants/sidebarMenuItems";
+import { CustomerNavMenuItem, NavMenuItem, providerNavMenuItem } from "./constants/sidebarMenuItems";
 import { TNavMain } from "@/types/nav.types";
 import Image from "next/image";
 import Link from "next/link";
 
 // This is sample data.
 const data = {
-    user: {
-        name: "shadcn",
-        email: "m@example.com",
-        avatar: "/avatars/shadcn.jpg",
-    },
     teams: [
         {
             name: "Easy Meals",
@@ -32,7 +27,6 @@ const data = {
             plan: "Build your meal plan",
         },
     ],
-    navMain: [],
 };
 
 export function AppSidebar({
@@ -40,9 +34,15 @@ export function AppSidebar({
     ...props
 }: { user: DecodedUser | null } & React.ComponentProps<typeof Sidebar>) {
     const navMain: NavMenuItem[] = [];
+    // logic for user dashboard sidebar menu item 
     if (user?.role === "customer") {
         CustomerNavMenuItem.map((item) => navMain.push(item as NavMenuItem));
     }
+    // logic for provider dashboard sidebar menu item 
+    if (user?.role === "mealProvider") {
+        providerNavMenuItem.map((item) => navMain.push(item as NavMenuItem));
+    }
+
     return (
         <Sidebar collapsible="icon" {...props}>
             <SidebarHeader>
