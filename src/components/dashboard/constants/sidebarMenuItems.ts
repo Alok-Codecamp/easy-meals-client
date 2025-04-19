@@ -100,7 +100,7 @@ export const CustomerNavMenuItem = [
 export const providerNavMenuItem = [
     {
         title: "Manage Menus",
-        baseUrl: "/provider",
+        baseUrl: "/dashboard/provider",
         icon: GiMeal,
         isActive: true,
         items: [

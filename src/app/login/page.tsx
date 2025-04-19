@@ -22,7 +22,8 @@ type FormValue = z.infer<typeof loginValidationSchema>
 
 
 const LoginPage = () => {
-    const [login, { isLoading, isError }] = useLoginMutation();
+    const [customeErrorState, setCustomErrorState] = useState('');
+    const [login, { isLoading, isError, error }] = useLoginMutation();
     const dispatch = useAppDispatch();
     // const user = useAppSelector(selectCurrentUser) as DecodedUser;
 
@@ -41,6 +42,7 @@ const LoginPage = () => {
         try {
 
             const userData = await login(data);
+
             if (userData?.data) {
                 const token = userData?.data?.data?.accessToken;
                 const userInfo = verifyToken(token);
@@ -55,14 +57,15 @@ const LoginPage = () => {
                     router.push(`/profile/${userInfo?.role === 'mealProvider' ? 'provider' : 'customer'}`)
                 }
             } else {
+                setCustomErrorState((userData as any)?.error?.data?.message)
                 toast.error(`login faild `, { id: toastId })
             }
         } catch (err: any) {
-            console.log(err);
+
             toast.error('Something went wrong', { id: toastId });
         }
     }
-
+    console.log(customeErrorState);
 
     return (
         <div>
@@ -72,7 +75,7 @@ const LoginPage = () => {
                 <div className=' bg-white/90 shadow-lg w-fit h-fit px-10 py-6 text-green-800 mx-auto rounded-md'>
                     <h1 className='text-center text-2xl mt-2 mb-6'>Sign In</h1>
                     {
-                        isError ? <p className="text-red-800 text-sm text-center my-2">{isError}!</p> : <></>
+                        isError ? <p className="text-red-800 text-sm text-center my-2">{customeErrorState}!</p> : <></>
                     }
 
                     <form onSubmit={handleSubmit(onSumbimt)} >

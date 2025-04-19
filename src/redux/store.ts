@@ -1,4 +1,4 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '@/redux/features/auth/authSlice';
 import { persistStore, FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
@@ -9,14 +9,6 @@ const persistConfig = {
     storage,
 }
 const persistedReducer = persistReducer(persistConfig, authReducer)
-// Combine reducers (adding your `baseApi` as well)
-// const rootReducer = combineReducers({
-//     [baseApi.reducerPath]: baseApi.reducer,
-//     auth: authReducer, // The `auth` slice
-// });
-
-// Wrap root reducer with persistReducer
-
 
 export const store = configureStore({
     reducer: {

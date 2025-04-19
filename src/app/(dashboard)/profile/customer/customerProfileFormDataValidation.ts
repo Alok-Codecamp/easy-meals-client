@@ -1,10 +1,8 @@
 import { z } from 'zod';
 
 
-export const cuisineSpecialtySchema = z.object({
-    value: z.string().min(1, "Cuisine value is required"),
-});
-export const providerProfileformValidationSchema = z.object({
+
+export const customerProfileformValidationSchema = z.object({
     name: z
         .string({ required_error: 'Name is required!' })
         .min(2, { message: 'Name must be at least 2 character long' }),
@@ -16,9 +14,7 @@ export const providerProfileformValidationSchema = z.object({
     phone: z
         .string({ required_error: 'Phone number is required!' })
         .min(6, { message: 'Phone number must be at least 6 digits' }),
-    cuisineSpecialties: z.array(cuisineSpecialtySchema).min(1, "At least one cuisine is required"),
-    pricing: z.object({
-        min: z.string().min(1, "Min price must be 0 or more"),
-        max: z.string().min(1, "Max price must be 0 or more"),
-    }),
+
+    shippingAddress: z.string({ required_error: 'Name is required!' })
+        .min(2, { message: 'Name must be at least 2 character long' }).optional(),
 });
