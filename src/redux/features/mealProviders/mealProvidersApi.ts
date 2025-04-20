@@ -39,8 +39,15 @@ const providerApi = baseApi.injectEndpoints({
             // },
 
         }),
+        updateMealProviderProfile: builder.mutation({
+            query: (providerData) => ({
+                url: `/providers/update-profile/${providerData?.id}`,
+                method: "PUT",
+                body: providerData.data
+            })
+        })
     })
 })
 
 
-export const { useCreateMealProviderMutation, useGetMyMealsQuery, useGetAllMealsQuery } = providerApi;
+export const { useCreateMealProviderMutation, useGetMyMealsQuery, useGetAllMealsQuery, useUpdateMealProviderProfileMutation } = providerApi;

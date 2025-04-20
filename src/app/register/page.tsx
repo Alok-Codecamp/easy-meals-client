@@ -56,9 +56,14 @@ const RegisterPage = () => {
             if (userInfo) {
                 toast.success('registration successfull', { id: toastId })
                 dispatch(setUser({ user: userInfo, token: token }))
+                if (userInfo?.role === 'mealProvider') {
+                    router.push('/profile/provider/create-profile')
+                } else {
+                    router.push('/profile/customer')
+                }
             }
 
-            router.push('/')
+
         } else {
             toast.error('registration faild', { id: toastId })
         }

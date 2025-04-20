@@ -11,7 +11,9 @@ import easyStep1 from '@/assets/easyStep/step1.png'
 import easyStep2 from '@/assets/easyStep/step2.png'
 import easyStep3 from '@/assets/easyStep/step3.png'
 import easyStep4 from '@/assets/easyStep/step4.png'
-
+import providerBnrD from '@/assets/provider-banner-desktop.png';
+import providerBnrT from '@/assets/provider-banner-tab.jpg';
+import providerBnrM from '@/assets/provider-banner-mobile.png';
 import { Card, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import Footer from '../shared/Footer';
 import Link from 'next/link';
@@ -24,11 +26,37 @@ const Home = () => {
                 <NavBar />
                 {/* banner section  */}
                 <section className=''>
-                    <Image src={bannerDesktop} alt='dexktop' className='hidden lg:block h-[450px]' />
-                    <Image src={bannerTab} alt=' tab' width={1000} height={1080} className='hidden md:block sm:hidden lg:hidden' />
-                    <Image src={bannerMobile} width={600} height={700} alt='mobile' className='block md:hidden' />
+                    <div className='hidden lg:block'>
+                        <Image src={bannerDesktop} alt='dexktop' className='hidden lg:block h-[450px]' />
+                        <Link
+                            href='/register'
+                            className=' ml-16 -translate-x-1/2 bg-green-800 px-10 py-2 rounded-3xl text-white font-bold text-xl'
+                        >
+                            Join Now
+                        </Link>
+                    </div>
+                    <div className='hidden md:block sm:hidden lg:hidden'>
+                        <Image src={bannerTab} alt=' tab' width={1000} height={1080} className='hidden md:block sm:hidden lg:hidden' />
+                        <Link
+                            href='/register'
+                            className=' -translate-x-1/2 text-white px-10 py-2 rounded-3xl bg-green-800 font-bold text-xl w-fit ml-96 mt-2  inline-block '
+                        >
+                            Join Now
+                        </Link>
+                    </div>
+                    <div className='block md:hidden'>
+                        <Image src={bannerMobile} width={600} height={700} alt='mobile' className='block md:hidden' />
+                        <Link
+                            href='/register'
+                            className='ml-36 -translate-x-1/2 bg-green-800 px-10 py-2 rounded-3xl text-white '
+                        >
+                            Join Now
+                        </Link>
+                    </div>
 
                 </section>
+
+
             </header>
             {/* featured section  */}
             <section className='my-10 text-center border mx-16'>
@@ -129,6 +157,41 @@ const Home = () => {
                         </CardHeader>
                     </Card>
                 </div>
+
+
+                <section className='text-left'>
+                    <h1 className='text-center text-4xl font-bold text-gray-800'>Offer Your Meals</h1>
+                    <div className='hidden lg:block'>
+                        <Image src={providerBnrD} alt='dexktop' className='hidden lg:block h-[450px]' />
+                        <Link
+                            href='/register'
+                            className=' bg-green-800 px-10 py-2 rounded-3xl text-white font-bold text-xl inline-block mt-2 ml-16'
+                        >
+                            Join Now
+                        </Link>
+                    </div>
+                    <div className='hidden md:block sm:hidden lg:hidden'>
+                        <Image src={providerBnrT} alt=' tab' width={1000} height={1080} className='hidden md:block sm:hidden lg:hidden' />
+                        <Link
+                            href='/register'
+                            className=' text-white px-10 py-2 rounded-3xl bg-green-800 font-bold text-xl w-fit ml-56 mt-2  inline-block '
+                        >
+                            Join Now
+                        </Link>
+                    </div>
+                    <div className='block md:hidden'>
+                        <Image src={providerBnrM} width={600} height={700} alt='mobile' className='block md:hidden' />
+                        <Link
+                            href='/register'
+                            className='ml-20 mt-2 inline-block bg-green-800 px-10 py-2 rounded-3xl text-white '
+                        >
+                            Join Now
+                        </Link>
+                    </div>
+
+                </section>
+
+
             </section>
             {/* footer section  */}
             <footer className='border'>
