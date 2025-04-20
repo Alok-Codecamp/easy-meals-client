@@ -47,15 +47,15 @@ export const CustomerNavMenuItem = [
                 url: "#",
             },
             {
-                title: "Order Placed",
+                title: "Deliverd",
                 url: "#",
             },
             {
-                title: "Preparing Your Meal",
+                title: "In-Progress",
                 url: "#",
             },
             {
-                title: "Ready for Pickup",
+                title: "Pending",
                 url: "#"
             }
         ],

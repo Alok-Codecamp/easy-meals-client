@@ -7,14 +7,11 @@ import {
     SidebarHeader,
     SidebarRail,
 } from "@/components/ui/sidebar";
-import { TeamSwitcher } from "../dashboard/team-switcher";
 import { NavMain } from "../dashboard/nav-main";
-import { NavProjects } from "../dashboard/nav-projects";
 import { NavUser } from "../dashboard/nav-user";
 import { DecodedUser } from "@/types/auth.types";
 import { GiMeal } from "react-icons/gi";
 import { CustomerNavMenuItem, NavMenuItem, providerNavMenuItem } from "./constants/sidebarMenuItems";
-import { TNavMain } from "@/types/nav.types";
 import Image from "next/image";
 import Link from "next/link";
 

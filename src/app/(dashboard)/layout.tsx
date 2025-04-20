@@ -24,7 +24,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     <div className="flex items-center gap-2 px-4">
                         <SidebarTrigger className="-ml-1" />
                         <Separator orientation="vertical" className="mr-2 h-4" />
-                        <h1>NavBar</h1>
+                        <h1 className="text-2xl font-bold text-green-900">{userInfo?.role === 'customer' ? 'Customer Dashboard' : 'Meal Provider Dashboard'}</h1>
                     </div>
                 </header>
 
