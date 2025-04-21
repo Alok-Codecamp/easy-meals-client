@@ -10,7 +10,6 @@ import {
 import { selectCurrentUser } from "@/redux/features/auth/authSlice"
 import { useAppSelector } from "@/redux/hooks"
 import { DecodedUser } from "@/types/auth.types"
-import { usePathname } from "next/navigation"
 import { ReactNode } from "react"
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
@@ -27,8 +26,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                         <h1 className="text-2xl font-bold text-green-900">{userInfo?.role === 'customer' ? 'Customer Dashboard' : 'Meal Provider Dashboard'}</h1>
                     </div>
                 </header>
-
-
                 <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" >
                     {children}
                 </div>

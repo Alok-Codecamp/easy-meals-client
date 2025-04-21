@@ -11,14 +11,14 @@ const providerApi = baseApi.injectEndpoints({
                 body: providerData.data
             })
         }),
-        getMyMeals: builder.query({
+        getMyMealProvider: builder.query({
             query: (userId) => ({
                 url: `/providers/my-profile/${userId}`,
                 method: 'GET',
             })
 
         }),
-        getAllMeals: builder.query({
+        getAllMealProvider: builder.query({
             query: (args: TQueryParam[]) => {
                 const params = new URLSearchParams();
 
@@ -50,4 +50,4 @@ const providerApi = baseApi.injectEndpoints({
 })
 
 
-export const { useCreateMealProviderMutation, useGetMyMealsQuery, useGetAllMealsQuery, useUpdateMealProviderProfileMutation } = providerApi;
+export const { useCreateMealProviderMutation, useGetAllMealProviderQuery, useGetMyMealProviderQuery, useUpdateMealProviderProfileMutation } = providerApi;

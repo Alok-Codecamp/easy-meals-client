@@ -28,7 +28,10 @@ export const loginUser = async (data: LoginData) => {
     return serverResponse;
 }
 export const setCurrentUserInCoockies = async (token: string) => {
-    (await cookies()).set('accessToken', token)
+    (await cookies()).set('accessToken', token, {
+        maxAge: 60 * 60 * 24,
+
+    })
 }
 
 export const getCurrentUser = async () => {

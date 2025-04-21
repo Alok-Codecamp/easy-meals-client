@@ -8,74 +8,62 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { SubmitErrorHandler, SubmitHandler, useFieldArray, useForm } from "react-hook-form";
-
+import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ClockLoader } from "react-spinners";
-import { Plus } from "lucide-react";
-import { mealProviderSchema } from "./createMealFormValidation";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAppSelector } from "@/redux/hooks";
 import { selectCurrentUser } from "@/redux/features/auth/authSlice";
 import { DecodedUser } from "@/types/auth.types";
-import { useCreateMealProviderMutation } from "@/redux/features/mealProviders/mealProvidersApi";
 import { toast } from "sonner";
+import { useCreateMealMutation } from "@/redux/features/meals/mealApi";
+import { mealSchema } from "./createMealFormValidation";
+import { Checkbox } from "@/components/ui/checkbox";
+import { mealCategories, mealIngredients, mealPortions, mealTags } from "./constant";
+import { useGetMyMealProviderQuery } from "@/redux/features/mealProviders/mealProvidersApi";
 
-type TMealProvider = z.infer<typeof mealProviderSchema>;
+
+type TMealProvider = z.infer<typeof mealSchema>;
 const CreateMealPage = () => {
     const currentUser = useAppSelector(selectCurrentUser) as DecodedUser;
-    const [createMealProvider, { isLoading }] = useCreateMealProviderMutation();
+    const { data: providerData } = useGetMyMealProviderQuery(currentUser?.id);
+
+    const [createMeal, { isLoading }] = useCreateMealMutation();
     const form = useForm<TMealProvider>({
-        resolver: zodResolver(mealProviderSchema),
+        resolver: zodResolver(mealSchema),
         defaultValues: {
             title: "",
-            cuisineSpecialties: [{ value: " " }],
-            availableMeals: [
-                {
-                    mealTitle: "",
-                    description: "",
-                    price: "",
-                    image: ""
-                },
-            ],
-            pricing: { min: "", max: "" },
-            experience: "",
+            description: "",
+            price: "",
+            image: "",
+            preparationTime: "",
+            category: [""],
+            tags: [""],
+            ingredients: [""],
+            portion: [""],
         },
     });
 
-    const { append: appendAvailableMeals, fields: availableMealField } =
-        useFieldArray({
-            control: form.control,
-            name: "availableMeals",
-        });
 
-    const addAvailableMeals = () => {
-        appendAvailableMeals({ mealTitle: "", description: "", price: "", image: "" });
-    };
-
-    const { append: appendCuisineSpecialties, fields: cuisineSpecialtiesFields } =
-        useFieldArray({
-            control: form.control,
-            name: "cuisineSpecialties",
-        });
-
-    const addCuisineSpecialties = () => {
-        appendCuisineSpecialties({ value: "" });
-    };
 
     const onSubmit: SubmitHandler<TMealProvider> = async (data: any) => {
-        console.log(data);
-        const providerDdata = { data, id: currentUser?.id };
-        const toastId = toast.loading("Meal provider creating...");
+        data.providerId = providerData?.data[0]?._id
+
+
+        const toastId = toast.loading("Meal  creating...");
         try {
-            const resposneData = await createMealProvider(providerDdata);
+            const resposneData = await createMeal(data);
             if (resposneData.data) {
-                toast.success("Meal provider created successfully", { id: toastId });
+                console.log(resposneData.data);
+                toast.success("Meal  created successfully", { id: toastId });
+                form.reset();
+            } else {
+                toast.error((resposneData as any)?.error?.data?.message, { id: toastId });
             }
         } catch (err: any) {
-            toast.error("faild to create meal provider", { id: toastId });
+            toast.error("faild to create meal ", { id: toastId });
         }
     };
     return (
@@ -93,217 +81,304 @@ const CreateMealPage = () => {
                                 <FormItem>
                                     <FormLabel>Title</FormLabel>
                                     <FormControl>
-                                        <Input {...field} value={field.value || " "} className="" />
+                                        <Input {...field} value={field.value} className="" />
                                     </FormControl>
-                                    {/* <FormDescription>
-                                        This is your public display name.
-                                    </FormDescription> */}
+                                    <FormDescription>
+                                        Your meal title
+                                    </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
+
                         <div>
-                            <div>
-                                {cuisineSpecialtiesFields.map(
-                                    (cuisineSpecialtiesField, index) => (
-                                        <div id={cuisineSpecialtiesField.id}>
-                                            <FormField
-                                                control={form.control}
-                                                name={`cuisineSpecialties.${index}.value`}
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>cuisineSpecialtie{index + 1}</FormLabel>
-                                                        <FormControl>
-                                                            <Input
-                                                                {...field}
-                                                                value={field.value || ""}
-                                                                className=""
-                                                            />
-                                                        </FormControl>
-                                                        {/* <FormDescription>
-                                        This is your public display name.
-                                    </FormDescription> */}
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
+                            <FormField
+                                control={form.control}
+                                name="description"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Description</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                value={field.value}
+                                                className=""
                                             />
+                                        </FormControl>
+                                        <FormDescription>
+                                            Tell customers what makes this meal special. Mention
+                                            flavors, ingredients, or cooking style.
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        <div>
+                            <FormField
+                                control={form.control}
+                                name="price"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Price</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                value={field.value}
+                                                className=""
+                                            />
+                                        </FormControl>
+                                        <FormDescription>Mention your meal price</FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        <div>
+                            <FormField
+                                control={form.control}
+                                name="image"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Meal Image Url</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                value={field.value}
+                                                className=""
+                                            />
+                                        </FormControl>
+                                        <FormDescription>Provide your meal Image URl</FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        <div>
+                            <FormField
+                                control={form.control}
+                                name="preparationTime"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Preperation time</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                value={field.value}
+                                                className=""
+                                            />
+                                        </FormControl>
+                                        <FormDescription>How meny time to take prepeare the meal</FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        <div>
+                            <FormField
+                                control={form.control}
+                                name="category"
+                                render={() => (
+                                    <FormItem>
+                                        <div className="mb-4">
+                                            <FormLabel className="text-base">Meal Category</FormLabel>
+                                            <FormDescription>
+                                                Select Categories of your meal
+                                            </FormDescription>
                                         </div>
-                                    )
-                                )}
-                            </div>
-                            <div className="flex justify-between items-center px-4 border-2 border-gray-100 hover:border-gray-400 rounded-md shadow-md my-2 cursor-pointer">
-                                <p> Add more cuisineSpecialties</p>
-                                <Button onClick={addCuisineSpecialties} variant={"outline"}>
-                                    <Plus />
-                                </Button>
-                            </div>
-                        </div>
-                        <div>
-                            <div>
-                                {availableMealField.map((availabeMealField, index) => (
-                                    <div id={availabeMealField.id}>
-                                        <FormField
-                                            control={form.control}
-                                            name={`availableMeals.${index}.mealTitle`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>Meal title</FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            {...field}
-                                                            value={field.value || ""}
-                                                            className=""
-                                                        />
-                                                    </FormControl>
-                                                    {/* <FormDescription>
-                                        This is your public display name.
-                                    </FormDescription> */}
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name={`availableMeals.${index}.description`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>Description</FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            {...field}
-                                                            value={field.value || ""}
-                                                            className=""
-                                                        />
-                                                    </FormControl>
-                                                    {/* <FormDescription>
-                                        This is your public display name.
-                                    </FormDescription> */}
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name={`availableMeals.${index}.price`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>Meal price</FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            {...field}
-                                                            value={field.value || ""}
-                                                            className=""
-                                                        />
-                                                    </FormControl>
-                                                    {/* <FormDescription>
-                                        This is your public display name.
-                                    </FormDescription> */}
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name={`availableMeals.${index}.image`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>Meal Photo Url</FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            {...field}
-                                                            value={field.value || ""}
-                                                            className=""
-                                                        />
-                                                    </FormControl>
-                                                    {/* <FormDescription>
-                                        This is your public display name.
-                                    </FormDescription> */}
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="flex justify-between items-center px-4 border-2 border-gray-100 hover:border-gray-400 rounded-md shadow-md my-2">
-                                <p>Add more available meals</p>
-                                <Button onClick={addAvailableMeals} variant="outline">
-                                    <Plus />
-                                </Button>
-                            </div>
-                        </div>
-                        <div>
-                            <FormField
-                                control={form.control}
-                                name={"pricing.min"}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Minimum Price</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                {...field}
-                                                value={field.value || " "}
-                                                className=""
+                                        {mealCategories.map((item) => (
+                                            <FormField
+                                                key={item.id}
+                                                control={form.control}
+                                                name="category"
+                                                render={({ field }) => {
+                                                    return (
+                                                        <FormItem
+                                                            key={item.id}
+                                                            className="flex flex-row items-start space-x-3 space-y-0"
+                                                        >
+                                                            <FormControl>
+                                                                <Checkbox
+                                                                    checked={field.value?.includes(item.id)}
+                                                                    onCheckedChange={(checked) => {
+                                                                        return checked
+                                                                            ? field.onChange([...field.value, item.id])
+                                                                            : field.onChange(
+                                                                                field.value?.filter(
+                                                                                    (value) => value !== item.id
+                                                                                )
+                                                                            )
+                                                                    }}
+                                                                />
+                                                            </FormControl>
+                                                            <FormLabel className="text-sm font-normal">
+                                                                {item.label}
+                                                            </FormLabel>
+                                                        </FormItem>
+                                                    )
+                                                }}
                                             />
-                                        </FormControl>
-                                        {/* <FormDescription>
-                                        This is your public display name.
-                                    </FormDescription> */}
+                                        ))}
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
                         </div>
+                        {/* tags */}
                         <div>
                             <FormField
                                 control={form.control}
-                                name={"pricing.max"}
-                                render={({ field }) => (
+                                name="tags"
+                                render={() => (
                                     <FormItem>
-                                        <FormLabel>Maximum Price</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                {...field}
-                                                value={field.value || " "}
-                                                className=""
+                                        <div className="mb-4">
+                                            <FormLabel className="text-base">Meal Tags</FormLabel>
+                                            <FormDescription>
+                                                Select Tags of your meal
+                                            </FormDescription>
+                                        </div>
+                                        {mealTags.map((item) => (
+                                            <FormField
+                                                key={item.id}
+                                                control={form.control}
+                                                name="tags"
+                                                render={({ field }) => {
+                                                    return (
+                                                        <FormItem
+                                                            key={item.id}
+                                                            className="flex flex-row items-start space-x-3 space-y-0"
+                                                        >
+                                                            <FormControl>
+                                                                <Checkbox
+                                                                    checked={field.value?.includes(item.id)}
+                                                                    onCheckedChange={(checked) => {
+                                                                        return checked
+                                                                            ? field.onChange([...field.value, item.id])
+                                                                            : field.onChange(
+                                                                                field.value?.filter(
+                                                                                    (value) => value !== item.id
+                                                                                )
+                                                                            )
+                                                                    }}
+                                                                />
+                                                            </FormControl>
+                                                            <FormLabel className="text-sm font-normal">
+                                                                {item.label}
+                                                            </FormLabel>
+                                                        </FormItem>
+                                                    )
+                                                }}
                                             />
-                                        </FormControl>
-                                        {/* <FormDescription>
-                                        This is your public display name.
-                                    </FormDescription> */}
+                                        ))}
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
-
                         </div>
+                        {/* protion  */}
                         <div>
                             <FormField
                                 control={form.control}
-                                name="experience"
-                                render={({ field }) => (
+                                name="portion"
+                                render={() => (
                                     <FormItem>
-                                        <FormLabel>Experience</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                {...field}
-                                                value={field.value || " "}
-                                                className=""
+                                        <div className="mb-4">
+                                            <FormLabel className="text-base">Meal Portions</FormLabel>
+                                            <FormDescription>
+                                                Select portions of your meal
+                                            </FormDescription>
+                                        </div>
+                                        {mealPortions.map((item) => (
+                                            <FormField
+                                                key={item.id}
+                                                control={form.control}
+                                                name="portion"
+                                                render={({ field }) => {
+                                                    return (
+                                                        <FormItem
+                                                            key={item.id}
+                                                            className="flex flex-row items-start space-x-3 space-y-0"
+                                                        >
+                                                            <FormControl>
+                                                                <Checkbox
+                                                                    checked={field.value?.includes(item.id)}
+                                                                    onCheckedChange={(checked) => {
+                                                                        return checked
+                                                                            ? field.onChange([...field.value, item.id])
+                                                                            : field.onChange(
+                                                                                field.value?.filter(
+                                                                                    (value) => value !== item.id
+                                                                                )
+                                                                            )
+                                                                    }}
+                                                                />
+                                                            </FormControl>
+                                                            <FormLabel className="text-sm font-normal">
+                                                                {item.label}
+                                                            </FormLabel>
+                                                        </FormItem>
+                                                    )
+                                                }}
                                             />
-                                        </FormControl>
-                                        {/* <FormDescription>
-                                        This is your public display name.
-                                    </FormDescription> */}
+                                        ))}
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
                         </div>
-
+                        {/* ingredients */}
+                        <div>
+                            <FormField
+                                control={form.control}
+                                name="ingredients"
+                                render={() => (
+                                    <FormItem>
+                                        <div className="mb-4">
+                                            <FormLabel className="text-base">Meal Ingredients</FormLabel>
+                                            <FormDescription>
+                                                Select ingredients of your meal
+                                            </FormDescription>
+                                        </div>
+                                        {mealIngredients.map((item) => (
+                                            <FormField
+                                                key={item.id}
+                                                control={form.control}
+                                                name="ingredients"
+                                                render={({ field }) => {
+                                                    return (
+                                                        <FormItem
+                                                            key={item.id}
+                                                            className="flex flex-row items-start space-x-3 space-y-0"
+                                                        >
+                                                            <FormControl>
+                                                                <Checkbox
+                                                                    checked={field.value?.includes(item.id)}
+                                                                    onCheckedChange={(checked) => {
+                                                                        return checked
+                                                                            ? field.onChange([...field.value, item.id])
+                                                                            : field.onChange(
+                                                                                field.value?.filter(
+                                                                                    (value) => value !== item.id
+                                                                                )
+                                                                            )
+                                                                    }}
+                                                                />
+                                                            </FormControl>
+                                                            <FormLabel className="text-sm font-normal">
+                                                                {item.label}
+                                                            </FormLabel>
+                                                        </FormItem>
+                                                    )
+                                                }}
+                                            />
+                                        ))}
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
                         <Button type="submit" className="cursor-pointer">
-                            {
-                                isLoading ? <ClockLoader /> : "Create Meal"
-                            }
+                            {isLoading ? <ClockLoader /> : "Create Meal"}
                         </Button>
                     </form>
                 </Form>
