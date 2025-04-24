@@ -42,11 +42,14 @@ const mealApi = baseApi.injectEndpoints({
         }),
 
         updateMeal: builder.mutation({
-            query: (updatableMealData) => ({
-                url: `meals/update-meal/${updatableMealData?.mealId}`,
-                method: "PUT",
-                body: updatableMealData?.data
-            })
+            query: (updatableMealData) => {
+                console.log('inside rtk', updatableMealData);
+                return {
+                    url: `meals/update-meal/${updatableMealData.id}`,
+                    method: "PUT",
+                    body: updatableMealData.data,
+                }
+            }
         })
     })
 })

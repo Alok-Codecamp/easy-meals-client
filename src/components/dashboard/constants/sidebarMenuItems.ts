@@ -60,38 +60,7 @@ export const CustomerNavMenuItem = [
             }
         ],
     },
-    {
-        title: "Manage Preferences",
-        baseUrl: "/customer",
-        icon: PiBowlFoodFill,
-        items: [
 
-            {
-                title: "Clean Meals",
-                url: "clean-meals",
-            },
-            {
-                title: "Paleo",
-                url: "paleo",
-            },
-            {
-                title: "Keto Meals",
-                url: "keto-meals",
-            },
-            {
-                title: "Plant Based Meals",
-                url: "plant-based-meals",
-            },
-            {
-                title: "GLP-1 Meals",
-                url: "glp-1-Meals"
-            },
-            {
-                title: "Meal Prep",
-                url: "browse-all-meal-prep"
-            }
-        ],
-    },
 
 ]
 

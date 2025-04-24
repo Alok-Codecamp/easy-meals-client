@@ -1,5 +1,4 @@
 "use client";
-import * as React from "react";
 import {
     Sidebar,
     SidebarContent,
@@ -48,9 +47,10 @@ export function AppSidebar({
                     <Image
                         src="/logo.png"
                         alt="logo"
-                        width={200}
+                        width={0}
                         height={0}
                         sizes="100vw"
+                        className="w-[200px] h-auto"
                     />
                 </Link>
             </SidebarHeader>

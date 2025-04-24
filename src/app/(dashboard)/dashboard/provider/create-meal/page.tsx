@@ -25,13 +25,13 @@ import { mealCategories, mealIngredients, mealPortions, mealTags } from "./const
 import { useGetMyMealProviderQuery } from "@/redux/features/mealProviders/mealProvidersApi";
 
 
-type TMealProvider = z.infer<typeof mealSchema>;
+type TMeal = z.infer<typeof mealSchema>;
 const CreateMealPage = () => {
     const currentUser = useAppSelector(selectCurrentUser) as DecodedUser;
     const { data: providerData } = useGetMyMealProviderQuery(currentUser?.id);
 
     const [createMeal, { isLoading }] = useCreateMealMutation();
-    const form = useForm<TMealProvider>({
+    const form = useForm<TMeal>({
         resolver: zodResolver(mealSchema),
         defaultValues: {
             title: "",
@@ -48,7 +48,7 @@ const CreateMealPage = () => {
 
 
 
-    const onSubmit: SubmitHandler<TMealProvider> = async (data: any) => {
+    const onSubmit: SubmitHandler<TMeal> = async (data: any) => {
         data.providerId = providerData?.data[0]?._id
 
 

@@ -1,11 +1,15 @@
 "use client"
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { useGetAllMealsQuery, useGetMyMealsQuery } from "@/redux/features/mealProviders/mealProvidersApi";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useGetAllMealQuery } from "@/redux/features/meals/mealApi";
+import { IMeal } from "@/types/meal";
 import { IMealProvider } from "@/types/mealProvider";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 
 
 const CustomerPage = () => {
@@ -18,43 +22,58 @@ const CustomerPage = () => {
     const [isAvailable, setIsAvailable] = useState(true);
     const queryArray = useMemo(() => {
         return [
-            // { name: "limit", value: limit },
-            // { name: "sort", value: sort },
-            // { name: "page", value: page },
-            { name: "minPrice", value: minPrice },
-            { name: "maxPrice", value: maxPrice },
-            { name: "isAvailable", value: isAvailable },
+            { name: "limit", value: limit },
+            { name: "sort", value: sort },
+            { name: "page", value: page },
             { name: "search", value: search },
 
         ];
-    }, [page, sort, limit, minPrice, maxPrice, search, isAvailable]);
+    }, [page, sort, limit, search,]);
 
-    const { data: mealData } = useGetAllMealsQuery(queryArray)
-    console.log(mealData);
+    const { data: mealData } = useGetAllMealQuery(queryArray)
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearch(e.target.value)
+    }
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3">
+        <div className="px-6">
+            <h1 className="text-3xl text-green-900 text-center font-bold mt-6 mb-10">All Meals</h1>
+            <div className="flex justify-between items-center space-x-4 mb-6 px-6">
+                <div>
+                    <Input onChange={handleSearch} placeholder="Search Meal" className="border-2 border-gray-400" />
+                </div>
+            </div>
+            <div className="grid md:grid-cols-3 gap-4 px-6">
 
-            {
-                mealData?.data?.map((item: IMealProvider, index: number) => (
-
-                    <Card id={String(index)} className=" py-2 px-2">
+                {mealData?.data?.map((item: IMeal, index: number) => (
+                    <Card key={item?._id} className=" py-2 px-2">
                         <CardHeader>
-                            <Image src={item?.availableMeals[0]?.image} alt="meal image" width={0} height={0} unoptimized className="w-80 mx-auto rounded-md" />
+                            <Image
+                                src={item?.image}
+                                alt="meal image"
+                                width={0}
+                                height={0}
+                                unoptimized
+                                priority
+                                sizes="100vw"
+                                className="rounded-md w-[320px]  h-auto"
+                            />
                             <CardTitle className="my-2 text-green-900">{item?.title}</CardTitle>
-                            <CardDescription className="text-md text-green-900">cuisineSpecialties:{item?.cuisineSpecialties?.map(citem => (`${citem?.value} ,`))}</CardDescription>
-                            <CardDescription className="text-md text-green-900">Kitchen Experience:{item?.experience}</CardDescription>
-                            <CardDescription className="text-md text-green-900">Pricing: ${item?.pricing?.min}-${item?.pricing?.max}</CardDescription>
+                            <CardDescription className="text-md text-green-900">Price:{item?.price}</CardDescription>
+                            <CardDescription className="text-md text-green-900">Category: {item?.category}</CardDescription>
+                            <CardDescription className="text-md text-green-900">Prepear Time: {item?.preparationTime}</CardDescription>
+                            <CardDescription className="text-md text-green-900">Is Available: {item.isAvailable ? 'Yes' : 'No'}</CardDescription>
                         </CardHeader>
 
                         <CardFooter className="mx-0 px-0 flex justify-between items-center">
-                            <Button className="">View meals</Button>
-                            <Button className=""><Link href="/profile/provider">Order now</Link></Button>
+                            <Button className=""><Link href={` `}>View Details</Link></Button>
+                            <Button className=""><Link href={` `}>Order Now</Link></Button>
                         </CardFooter>
                     </Card>
-
                 ))
-            }
+                }
 
+
+            </div>
         </div>
     );
 }

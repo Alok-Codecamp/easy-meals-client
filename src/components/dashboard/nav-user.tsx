@@ -47,8 +47,8 @@ export function NavUser({
     const router = useRouter();
     const userInfo = useAppSelector(selectCurrentUser) as DecodedUser;
     const handleLogOut = async () => {
-        dispatch(logOut());
         await deleteCoockies();
+        dispatch(logOut());
         if (prodetectedRoutes.some((route) => pathname.match(route))) {
             router.push('/')
         }

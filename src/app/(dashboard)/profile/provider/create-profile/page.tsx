@@ -1,6 +1,9 @@
 "use client";
 import { selectCurrentUser } from "@/redux/features/auth/authSlice";
-import { useGetMyProfileQuery, useUpdateProfileMutation } from "@/redux/features/user/userApi";
+import {
+    useGetMyProfileQuery,
+    useUpdateProfileMutation,
+} from "@/redux/features/user/userApi";
 import { useAppSelector } from "@/redux/hooks";
 import { DecodedUser } from "@/types/auth.types";
 import Image from "next/image";
@@ -10,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -20,80 +24,72 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { ClockLoader } from "react-spinners";
-import { useCreateMealProviderMutation, useGetMyMealsQuery } from "@/redux/features/mealProviders/mealProvidersApi";
+import { useCreateMealProviderMutation } from "@/redux/features/mealProviders/mealProvidersApi";
 import { Plus } from "lucide-react";
 import { createProviderProfileformValidationSchema } from "./createProviderProfileVAlidation";
+import { Checkbox } from "@/components/ui/checkbox";
+import { daysOfWeek, mealOptions } from "./constants";
 
-
-export type FormValue = z.infer<typeof createProviderProfileformValidationSchema>;
+export type FormValue = z.infer<
+    typeof createProviderProfileformValidationSchema
+>;
 
 const CreateProviderProfilePage = () => {
-
     const userInfo = useAppSelector(selectCurrentUser) as DecodedUser;
-    const [createProviderProfile, { error }] = useCreateMealProviderMutation()
+    const [createProviderProfile, { error }] = useCreateMealProviderMutation();
     const { data: profileData, isLoading } = useGetMyProfileQuery(userInfo?.id);
     const providerUserInfo = profileData?.data;
 
     const form = useForm<FormValue>({
         resolver: zodResolver(createProviderProfileformValidationSchema),
         defaultValues: {
-            cuisineSpecialties: [{ value: '' }],
-            availability: [{ value: '' }],
-            availableMealOptions: [{ value: '' }],
+            cuisineSpecialties: [{ value: "" }],
+            availability: [""],
+            availableMealOptions: [""],
             pricing: { min: "", max: "" },
             experience: "",
-
         },
     });
 
-    const { append: appendCuisineSpecialties, fields: cuisineSpecialtiesFields } = useFieldArray({
-        control: form.control,
-        name: "cuisineSpecialties",
-    });
+    const { append: appendCuisineSpecialties, fields: cuisineSpecialtiesFields } =
+        useFieldArray({
+            control: form.control,
+            name: "cuisineSpecialties",
+        });
 
     const addCuisineSpecialties = () => {
         appendCuisineSpecialties({ value: "" });
     };
-    const { append: appendAvailabilities, fields: availabilityFields } = useFieldArray({
-        control: form.control,
-        name: "availability",
-    });
 
-    const addAvailabilities = () => {
-        appendAvailabilities({ value: "" });
-    };
-    const { append: appendavailableMealOptions, fields: availableMealOptionsFields } = useFieldArray({
-        control: form.control,
-        name: "availableMealOptions",
-    });
-
-    const addavailableMealOptions = () => {
-        appendavailableMealOptions({ value: "" });
-    };
     const onSubmit: SubmitHandler<FormValue> = async (data: any) => {
         data.mealProvider = providerUserInfo?._id;
         console.log(data);
-        const toastId = toast.loading('profile data updating...')
+        const toastId = toast.loading("profile data updating...");
 
         try {
-
-            const resData = await createProviderProfile({ data, id: userInfo?.id }).unwrap()
+            const resData = await createProviderProfile({
+                data,
+                id: userInfo?.id,
+            }).unwrap();
             console.log(resData);
 
-            toast.success('Profile created successfull', { id: toastId })
-
+            toast.success("Profile created successfull", { id: toastId });
         } catch (err: any) {
-            toast.error('something went wrong', { id: toastId })
+            toast.error("something went wrong", { id: toastId });
         }
     };
     return (
         <div>
-            {isLoading ? <p>Loading Data...</p> :
+            {isLoading ? (
+                <p>Loading Data...</p>
+            ) : (
                 <div className="shadow-md mx-10 px-10">
                     <div className="flex justify-between items-center">
                         <div>
-                            <h1 className="text-2xl text-green-800">Welcome {providerUserInfo?.name}! To get started, please complete your profile by providing the necessary information."</h1>
-
+                            <h1 className="text-2xl text-green-800">
+                                Welcome {providerUserInfo?.name}! To get started, please
+                                complete your profile by providing the necessary information."
+                            </h1>
                         </div>
                         {/* <Image
                             src="https://i.ibb.co.com/hxkN5fkR/Abstract-Profile-Photo-Instagram-Post.jpg"
@@ -105,11 +101,16 @@ const CreateProviderProfilePage = () => {
                     </div>
                     <div className="py-10">
                         <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                            <form
+                                onSubmit={form.handleSubmit(onSubmit)}
+                                className="space-y-8"
+                            >
                                 <div className="text-center">
-                                    {
-                                        error && <p className="text-red-800 text-md">{(error as any)?.data?.message}</p>
-                                    }
+                                    {error && (
+                                        <p className="text-red-800 text-md">
+                                            {(error as any)?.data?.message}
+                                        </p>
+                                    )}
                                 </div>
                                 <div>
                                     <div>
@@ -121,7 +122,9 @@ const CreateProviderProfilePage = () => {
                                                         name={`cuisineSpecialties.${index}.value`}
                                                         render={({ field }) => (
                                                             <FormItem>
-                                                                <FormLabel>cuisineSpecialtie{index + 1}</FormLabel>
+                                                                <FormLabel>
+                                                                    cuisineSpecialtie{index + 1}
+                                                                </FormLabel>
                                                                 <FormControl>
                                                                     <Input
                                                                         {...field}
@@ -148,70 +151,116 @@ const CreateProviderProfilePage = () => {
 
                                 {/* availability fields  */}
                                 <div>
-                                    <div>
-                                        {availabilityFields.map(
-                                            (availabilityField, index) => (
-                                                <div id={availabilityField?.id}>
-                                                    <FormField
-                                                        control={form.control}
-                                                        name={`availability.${index}.value`}
-                                                        render={({ field }) => (
-                                                            <FormItem>
-                                                                <FormLabel>"When Are You Available? (Slot {index + 1})</FormLabel>
-                                                                <FormControl>
-                                                                    <Input
-                                                                        {...field}
-                                                                        value={field.value || ""}
-                                                                        className=""
-                                                                    />
-                                                                </FormControl>
-                                                                <FormMessage />
-                                                            </FormItem>
-                                                        )}
-                                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="availability"
+                                        render={() => (
+                                            <FormItem>
+                                                <div className="mb-4">
+                                                    <FormLabel className="text-base">
+                                                        Availability
+                                                    </FormLabel>
+                                                    <FormDescription>
+                                                        Select you available day
+                                                    </FormDescription>
                                                 </div>
-                                            )
+                                                {daysOfWeek.map((item) => (
+                                                    <FormField
+                                                        key={item.id}
+                                                        control={form.control}
+                                                        name="availability"
+                                                        render={({ field }) => {
+                                                            return (
+                                                                <FormItem
+                                                                    key={item.id}
+                                                                    className="flex flex-row items-start space-x-3 space-y-0"
+                                                                >
+                                                                    <FormControl>
+                                                                        <Checkbox className="border-2 border-gray-400"
+                                                                            checked={field.value?.includes(item.id)}
+                                                                            onCheckedChange={(checked) => {
+                                                                                return checked
+                                                                                    ? field.onChange([
+                                                                                        ...field.value || [],
+                                                                                        item.id,
+                                                                                    ])
+                                                                                    : field.onChange(
+                                                                                        field.value?.filter(
+                                                                                            (value) => value !== item.id
+                                                                                        )
+                                                                                    );
+                                                                            }}
+                                                                        />
+                                                                    </FormControl>
+                                                                    <FormLabel className="text-sm font-normal">
+                                                                        {item.label}
+                                                                    </FormLabel>
+                                                                </FormItem>
+                                                            );
+                                                        }}
+                                                    />
+                                                ))}
+                                                <FormMessage />
+                                            </FormItem>
                                         )}
-                                    </div>
-                                    <div className="flex justify-between items-center px-4 border-2 border-gray-100 hover:border-gray-400 rounded-md shadow-md my-2 cursor-pointer">
-                                        <p> Add Another day</p>
-                                        <Button onClick={addAvailabilities} variant={"outline"}>
-                                            <Plus />
-                                        </Button>
-                                    </div>
+                                    />
                                 </div>
+
+                                {/* available Meal Options */}
                                 <div>
-                                    <div>
-                                        {availableMealOptionsFields.map(
-                                            (availableMealOptionsField, index) => (
-                                                <div id={availableMealOptionsField?.id}>
-                                                    <FormField
-                                                        control={form.control}
-                                                        name={`availableMealOptions.${index}.value`}
-                                                        render={({ field }) => (
-                                                            <FormItem>
-                                                                <FormLabel>"Available meal options({index + 1})</FormLabel>
-                                                                <FormControl>
-                                                                    <Input
-                                                                        {...field}
-                                                                        value={field.value || ""}
-                                                                        className=""
-                                                                    />
-                                                                </FormControl>
-                                                                <FormMessage />
-                                                            </FormItem>
-                                                        )}
-                                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="availableMealOptions"
+                                        render={() => (
+                                            <FormItem>
+                                                <div className="mb-4">
+                                                    <FormLabel className="text-base">
+                                                        Available Meal Options
+                                                    </FormLabel>
+                                                    <FormDescription>
+                                                        Select your available meal options
+                                                    </FormDescription>
                                                 </div>
-                                            )
+                                                {mealOptions.map((item) => (
+                                                    <FormField
+                                                        key={item.id}
+                                                        control={form.control}
+                                                        name="availableMealOptions"
+                                                        render={({ field }) => {
+                                                            return (
+                                                                <FormItem
+                                                                    key={item.id}
+                                                                    className="flex flex-row items-start space-x-3 space-y-0"
+                                                                >
+                                                                    <FormControl>
+                                                                        <Checkbox className="border-2 border-gray-400"
+                                                                            checked={field.value?.includes(item.id)}
+                                                                            onCheckedChange={(checked) => {
+                                                                                return checked
+                                                                                    ? field.onChange([
+                                                                                        ...field.value || [],
+                                                                                        item.id,
+                                                                                    ])
+                                                                                    : field.onChange(
+                                                                                        field.value?.filter(
+                                                                                            (value) => value !== item.id
+                                                                                        )
+                                                                                    );
+                                                                            }}
+                                                                        />
+                                                                    </FormControl>
+                                                                    <FormLabel className="text-sm font-normal">
+                                                                        {item.label}
+                                                                    </FormLabel>
+                                                                </FormItem>
+                                                            );
+                                                        }}
+                                                    />
+                                                ))}
+                                                <FormMessage />
+                                            </FormItem>
                                         )}
-                                    </div>
-                                    <div className="flex justify-between items-center px-4 border-2 border-gray-100 hover:border-gray-400 rounded-md shadow-md my-2 cursor-pointer">
-                                        <p> Add more available Meal Options</p>
-                                        <Button onClick={addavailableMealOptions} variant={"outline"}>
-                                            <Plus />
-                                        </Button>
-                                    </div>
+                                    />
                                 </div>
                                 {/* experience field  */}
                                 <div>
@@ -225,7 +274,6 @@ const CreateProviderProfilePage = () => {
                                                     <Input
                                                         {...field}
                                                     // value={field.value ||""}
-
                                                     />
                                                 </FormControl>
                                                 <FormMessage />
@@ -276,11 +324,14 @@ const CreateProviderProfilePage = () => {
                                             </FormItem>
                                         )}
                                     />
-
                                 </div>
                                 <div className="text-center">
-                                    <Button type="submit" disabled={isLoading} className="cursor-pointer">
-                                        {isLoading ? (
+                                    <Button
+                                        type="submit"
+                                        disabled={isLoading}
+                                        className="cursor-pointer"
+                                    >
+                                        {form.formState.isSubmitting ? (
                                             <ClockLoader color="#fff" size={24} />
                                         ) : (
                                             "Save Change"
@@ -291,9 +342,8 @@ const CreateProviderProfilePage = () => {
                         </Form>
                     </div>
                 </div>
-            }
+            )}
         </div>
-
     );
 };
 

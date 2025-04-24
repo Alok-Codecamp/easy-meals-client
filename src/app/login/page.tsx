@@ -23,9 +23,9 @@ type FormValue = z.infer<typeof loginValidationSchema>
 
 const LoginPage = () => {
     const [customeErrorState, setCustomErrorState] = useState('');
-    const [login, { isLoading, isError, error }] = useLoginMutation();
+    const [login, { isError }] = useLoginMutation();
     const dispatch = useAppDispatch();
-    // const user = useAppSelector(selectCurrentUser) as DecodedUser;
+    const userLogedin = useAppSelector(selectCurrentUser) as DecodedUser;
 
     const searchParams = useSearchParams();
     const redirect = searchParams.get("redirectPath")
@@ -51,10 +51,19 @@ const LoginPage = () => {
                 toast.success('Login successfully', { id: toastId });
 
                 if (redirect) {
+                    console.log('redirect');
                     router.push(redirect)
-                } else {
-                    console.log(userInfo?.role);
-                    router.push(`/profile/${userInfo?.role === 'mealProvider' ? 'provider' : 'customer'}`)
+                }
+                else if (userInfo && userInfo?.role === 'mealProvider') {
+                    console.log('provider');
+                    router.push('/dashboard/provider')
+                }
+                else if (userInfo && userInfo?.role === 'customer') {
+                    console.log('customer');
+                    router.push('/dashboard/customer')
+                }
+                else {
+                    router.push('/')
                 }
             } else {
                 setCustomErrorState((userData as any)?.error?.data?.message)
@@ -95,7 +104,7 @@ const LoginPage = () => {
 
                         {
                             isSubmitting ? <div className='text-center bg-green-900 my-2 h-8 w-64 md:w-80 rounded-md cursor-progress flex justify-center items-center'><ClockLoader
-                                color='#d0d3d4' size={24} speedMultiplier={1.2} /></div> : <input className='bg-green-900 w-64 md:w-80 py-1 rounded-md cursor-pointer text-white' type="submit" value="Sign In" />
+                                color='#d0d3d4' size={24} speedMultiplier={1.2} /></div> : <input className='bg-green-900 w-64 md:w-80 py-1 rounded-md cursor-pointer text-white' type="submit" value="Sign In" disabled={userLogedin ? true : false} />
                         }
 
 

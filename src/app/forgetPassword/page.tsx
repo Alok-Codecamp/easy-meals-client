@@ -19,6 +19,7 @@ const ForgetPasswordPage = () => {
     const [forgetPassword, { isLoading, isError, error }] = useForgetPasswordMutation();
     const [response, setResponse] = useState('Enter your email for reset password');
     const errorMessage = error && (error as any)?.data?.message;
+
     const {
         register,
         handleSubmit,
@@ -31,13 +32,14 @@ const ForgetPasswordPage = () => {
         const toastId = toast.loading('please wait...');
         try {
             const res = await forgetPassword(data);
-            console.log(res);
+
             if (res.data) {
                 setResponse(res.data?.message)
                 toast.success("We've sent a password reset link to your email. Please check your inbox.!", { id: toastId })
                 reset();
             } else {
-                toast.error(`password forget faild`, { id: toastId })
+                // console.log((res as any).error.data.message);
+                toast.error(`password forget faild `, { id: toastId })
                 reset();
             }
         } catch (err: any) {
@@ -51,7 +53,7 @@ const ForgetPasswordPage = () => {
                 <div className='bg-white/90 shadow-lg w-fit h-fit px-10 py-6 text-green-800 mx-auto rounded-md'>
                     <h1 className='text-center text-2xl mt-2 mb-6'>Reset your Password</h1>
                     {
-                        isError ? <p className="text-white text-sm text-center">{errorMessage}!</p> : <p className="text-white text-sm text-left">{response}</p>
+                        isError ? <p className="text-red-800 text-sm text-center">{errorMessage}!</p> : <p className="text-white text-sm text-left">{response}</p>
                     }
                     <form onSubmit={handleSubmit(onSumbimt)}>
                         <label>Email</label>
@@ -68,9 +70,13 @@ const ForgetPasswordPage = () => {
 
 
                     </form>
-                    <div className='text-center'>
-                        <Link className='text-gray-200 text-sm my-4 ' href={'/login'} >click here for <span className=' underline decoration-2 decoration-green-200'>SignIn</span></Link>
+
+
+                    <div className='text-left text-green-800'>
+                        <Link className='text-green-800 text-sm my-4 ' href={'/login'} >click here for <span className=' underline decoration-2 decoration-green-200'>SignIn</span></Link>
+                        <p className='text-sm my-4 '>Don't have an account <Link className=' underline decoration-2 decoration-green-800' href={'/register'}>signup</Link></p>
                     </div>
+
                 </div>
             </div>
         </div>

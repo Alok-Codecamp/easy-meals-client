@@ -25,9 +25,10 @@ import { providerProfileformValidationSchema } from "./formDataValidation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { ClockLoader } from "react-spinners";
-import { useGetMyMealsQuery, useUpdateMealProviderProfileMutation } from "@/redux/features/mealProviders/mealProvidersApi";
+import { useGetMyMealProviderQuery, useUpdateMealProviderProfileMutation } from "@/redux/features/mealProviders/mealProvidersApi";
 import { Plus } from "lucide-react";
-import clsx from "clsx";
+import { Checkbox } from "@/components/ui/checkbox";
+import { daysOfWeek, mealOptions } from "./constants";
 
 export type FormValue = z.infer<typeof providerProfileformValidationSchema>;
 
@@ -35,7 +36,7 @@ const ProviderProfilePage = () => {
     const userInfo = useAppSelector(selectCurrentUser) as DecodedUser;
     const [updateUser, { isSuccess }] = useUpdateMealProviderProfileMutation();
     const { data: profileData, isLoading } = useGetMyProfileQuery(userInfo?.id);
-    const { data: mealProvider } = useGetMyMealsQuery(userInfo?.id);
+    const { data: mealProvider } = useGetMyMealProviderQuery(userInfo?.id);
 
     const myData = profileData?.data;
 
@@ -46,7 +47,8 @@ const ProviderProfilePage = () => {
             cuisineSpecialties: [
                 { value: mealProvider?.data[0]?.cuisineSpecialties[0]?.value },
             ],
-            availability: [{ value: mealProvider?.data[0]?.availability[0]?.value }],
+            availability: mealProvider?.data[0]?.availability,
+            availableMealOptions: mealProvider?.data[0]?.availableMealOptions,
             pricing: { min: "", max: "" },
         },
     });
@@ -56,9 +58,8 @@ const ProviderProfilePage = () => {
                 cuisineSpecialties: mealProvider?.data[0]?.cuisineSpecialties?.map(
                     (item: any) => ({ value: item?.value })
                 ),
-                availability: mealProvider?.data[0]?.availability?.map((item: any) => ({
-                    value: item?.value,
-                })),
+                availability: mealProvider?.data[0]?.availability,
+                availableMealOptions: mealProvider?.data[0]?.availableMealOptions,
                 pricing: {
                     min: mealProvider?.data[0]?.pricing.min || "",
                     max: mealProvider?.data[0]?.pricing.max || "",
@@ -76,22 +77,14 @@ const ProviderProfilePage = () => {
     const addCuisineSpecialties = () => {
         appendCuisineSpecialties({ value: "" });
     };
-    const { append: appendAvailabilities, fields: availabilityFields } =
-        useFieldArray({
-            control: form.control,
-            name: "availability",
-        });
 
-    const addAvailabilities = () => {
-        appendAvailabilities({ value: "" });
-    };
     const onSubmit: SubmitHandler<FormValue> = async (data: any) => {
-
+        console.log(data, userInfo?.id);
 
         const toastId = toast.loading("profile data updating...");
 
         try {
-            const resData = await updateUser({ data, id: userInfo?.id }).unwrap();
+            const resData = await updateUser({ data, id: userInfo?.id });
             console.log(resData);
 
             toast.success("Profile update successfull", { id: toastId });
@@ -128,7 +121,7 @@ const ProviderProfilePage = () => {
                                     <div>
                                         {cuisineSpecialtiesFields.map(
                                             (cuisineSpecialtiesField, index) => (
-                                                <div id={cuisineSpecialtiesField?.id}>
+                                                <div key={cuisineSpecialtiesField?.id}>
                                                     <FormField
                                                         control={form.control}
                                                         name={`cuisineSpecialties.${index}.value`}
@@ -163,37 +156,116 @@ const ProviderProfilePage = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <div>
-                                        {availabilityFields.map((availabilityField, index) => (
-                                            <div id={availabilityField?.id}>
-                                                <FormField
-                                                    control={form.control}
-                                                    name={`availability.${index}.value`}
-                                                    render={({ field }) => (
-                                                        <FormItem>
-                                                            <FormLabel>
-                                                                "When Are You Available? (Slot {index + 1})
-                                                            </FormLabel>
-                                                            <FormControl>
-                                                                <Input
-                                                                    {...field}
-                                                                    value={field.value || ""}
-                                                                    className=""
-                                                                />
-                                                            </FormControl>
-                                                            <FormMessage />
-                                                        </FormItem>
-                                                    )}
-                                                />
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <div className="flex justify-between items-center px-4 border-2 border-gray-100 hover:border-gray-400 rounded-md shadow-md my-2 cursor-pointer">
-                                        <p> Add Another day</p>
-                                        <Button onClick={addAvailabilities} variant={"outline"}>
-                                            <Plus />
-                                        </Button>
-                                    </div>
+                                    <FormField
+                                        control={form.control}
+                                        name="availability"
+                                        render={() => (
+                                            <FormItem>
+                                                <div className="mb-4">
+                                                    <FormLabel className="text-base">
+                                                        Availability
+                                                    </FormLabel>
+                                                    <FormDescription>
+                                                        Select you available day
+                                                    </FormDescription>
+                                                </div>
+                                                {daysOfWeek.map((item) => (
+                                                    <FormField
+                                                        key={item.id}
+                                                        control={form.control}
+                                                        name="availability"
+                                                        render={({ field }) => {
+                                                            return (
+                                                                <FormItem
+                                                                    key={item.id}
+                                                                    className="flex flex-row items-start space-x-3 space-y-0"
+                                                                >
+                                                                    <FormControl>
+                                                                        <Checkbox className="border-2 border-gray-400"
+                                                                            checked={field.value?.includes(item.id)}
+                                                                            onCheckedChange={(checked) => {
+                                                                                return checked
+                                                                                    ? field.onChange([
+                                                                                        ...field.value || [],
+                                                                                        item.id,
+                                                                                    ])
+                                                                                    : field.onChange(
+                                                                                        field.value?.filter(
+                                                                                            (value) => value !== item.id
+                                                                                        )
+                                                                                    );
+                                                                            }}
+                                                                        />
+                                                                    </FormControl>
+                                                                    <FormLabel className="text-sm font-normal">
+                                                                        {item.label}
+                                                                    </FormLabel>
+                                                                </FormItem>
+                                                            );
+                                                        }}
+                                                    />
+                                                ))}
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+
+                                {/* available Meal Options */}
+                                <div>
+                                    <FormField
+                                        control={form.control}
+                                        name="availableMealOptions"
+                                        render={() => (
+                                            <FormItem>
+                                                <div className="mb-4">
+                                                    <FormLabel className="text-base">
+                                                        Available Meal Options
+                                                    </FormLabel>
+                                                    <FormDescription>
+                                                        Select your available meal options
+                                                    </FormDescription>
+                                                </div>
+                                                {mealOptions.map((item) => (
+                                                    <FormField
+                                                        key={item.id}
+                                                        control={form.control}
+                                                        name="availableMealOptions"
+                                                        render={({ field }) => {
+                                                            return (
+                                                                <FormItem
+                                                                    key={item.id}
+                                                                    className="flex flex-row items-start space-x-3 space-y-0"
+                                                                >
+                                                                    <FormControl>
+                                                                        <Checkbox className="border-2 border-gray-400"
+                                                                            checked={field.value?.includes(item.id)}
+                                                                            onCheckedChange={(checked) => {
+                                                                                return checked
+                                                                                    ? field.onChange([
+                                                                                        ...field.value || [],
+                                                                                        item.id,
+                                                                                    ])
+                                                                                    : field.onChange(
+                                                                                        field.value?.filter(
+                                                                                            (value) => value !== item.id
+                                                                                        )
+                                                                                    );
+                                                                            }}
+                                                                        />
+                                                                    </FormControl>
+                                                                    <FormLabel className="text-sm font-normal">
+                                                                        {item.label}
+                                                                    </FormLabel>
+                                                                </FormItem>
+                                                            );
+                                                        }}
+                                                    />
+                                                ))}
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
                                 </div>
                                 <div>
                                     <FormField
@@ -239,8 +311,8 @@ const ProviderProfilePage = () => {
                                         )}
                                     />
                                 </div>
-                                <Button type="submit" disabled={isLoading}>
-                                    {isLoading ? (
+                                <Button type="submit" disabled={isLoading} className="cursor-pointer">
+                                    {form.formState.isSubmitting ? (
                                         <ClockLoader color="#fff" size={24} />
                                     ) : (
                                         "Save Change"

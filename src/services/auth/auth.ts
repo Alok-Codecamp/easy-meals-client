@@ -3,7 +3,7 @@
 import { DecodedUser } from "@/types/auth.types";
 import verifyToken from "@/utils/verifyToken";
 import { cookies } from "next/headers";
-import { json } from "stream/consumers";
+
 
 
 type LoginData = {
@@ -49,4 +49,5 @@ export const getCurrentUser = async () => {
 
 export const deleteCoockies = async () => {
     (await cookies()).delete('accessToken');
+    (await cookies()).delete('refreshToken');
 }

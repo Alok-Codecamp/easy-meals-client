@@ -17,6 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { setCurrentUserInCoockies } from "@/services/auth/auth";
 
 
 type FormValue = z.infer<typeof registerValidationSchema>;
@@ -45,17 +46,15 @@ const RegisterPage = () => {
         const toastId = toast.loading('please wait...');
         const res = await signup(data);
 
-        console.log(res);
         if (res?.data) {
-            toast.success('registration successfull', { id: toastId })
             const userData = await login({ contact: data.email, password: data.password });
             const token = userData?.data?.data?.accessToken
             const userInfo = verifyToken(token)
 
-
             if (userInfo) {
                 toast.success('registration successfull', { id: toastId })
                 dispatch(setUser({ user: userInfo, token: token }))
+                await setCurrentUserInCoockies(token);
                 if (userInfo?.role === 'mealProvider') {
                     router.push('/profile/provider/create-profile')
                 } else {

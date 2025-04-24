@@ -1,6 +1,8 @@
+import { IMealProvider } from "./mealProvider";
+
 export interface IMeal {
     _id: string;
-    providerId?: string;
+    providerId?: string | IMealProvider;
     title: string;
     description: string;
     price: string;

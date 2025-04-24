@@ -29,7 +29,7 @@ const providerApi = baseApi.injectEndpoints({
                     })
                 }
                 return {
-                    url: '/providers/all-meals',
+                    url: '/providers/all-provider',
                     method: 'GET',
                     params: params
                 }
@@ -40,11 +40,14 @@ const providerApi = baseApi.injectEndpoints({
 
         }),
         updateMealProviderProfile: builder.mutation({
-            query: (providerData) => ({
-                url: `/providers/update-profile/${providerData?.id}`,
-                method: "PUT",
-                body: providerData.data
-            })
+            query: (providerData) => {
+                console.log(providerData);
+                return {
+                    url: `/providers/update-profile/${providerData?.id}`,
+                    method: "PUT",
+                    body: providerData.data
+                }
+            }
         })
     })
 })

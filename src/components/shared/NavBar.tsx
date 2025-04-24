@@ -24,27 +24,24 @@ import { Button } from "../ui/button";
 
 const NavBar = () => {
     const [open, setOpen] = useState(false);
-    const [isAnimating, setIsAnimating] = useState(false);
     const user = useAppSelector(selectCurrentUser) as DecodedUser;
     const dispatch = useAppDispatch();
     const pathname = usePathname();
     const router = useRouter();
+    const [isMounted, setIsMounted] = useState(false);
+
     useEffect(() => {
-        if (open) {
-            setIsAnimating(true); // Start animation when sidebar opens
-        }
-    }, [open]);
+        setIsMounted(true);
+    }, []);
 
     const handleLogOut = async () => {
-        dispatch(logOut());
         await deleteCoockies();
-
+        dispatch(logOut());
         if (prodetectedRoutes.some((route) => pathname.match(route))) {
             router.push('/')
         }
-
     };
-
+    if (!isMounted || status === 'loading') return null;
     return (
         <nav className="py-2 md:py-6 md:shadow-sm">
             {/* desktop menu  */}
@@ -62,48 +59,30 @@ const NavBar = () => {
                     </Link>
                     <ul className="hidden lg:flex space-x-6">
                         <li>
-                            <Link href="dashboard/customer">Meals</Link>
+                            <Link href="/find-meals">Find Meals</Link>
                         </li>
+
                         <li>
-                            <Link href='our-cehfs'>Our Chefs</Link>
+                            <Link href='/our-cehfs'>Our Chefs</Link>
+                        </li>
+
+
+
+                        <li>
+                            {user && (
+                                <Link href={user.role === 'mealProvider' ? '/dashboard/provider' : '/dashboard/customer'}>
+                                    Dashboard
+                                </Link>
+                            )}
                         </li>
                         <li>
                             <Link href={"about-us"}>About Us</Link>
-                        </li>
-                        <li>
-                            <button>For meal provider</button>
-                        </li>
-
-                        {/* <li>Reviews</li>
-                        <li>FAQs</li> */}
-                        <li>
-                            {
-                                user && <Link href={user?.role === "mealProvider" ? '/dashboard/provider' : '/dashboard/customer'}>Dashboard</Link>
-                            }
                         </li>
 
                     </ul>
                 </div>
                 {/* search and Login  */}
                 <div className="hidden lg:flex justify-center items-center">
-                    <div className="mr-12">
-                        <input
-                            className="border border-gray-300 rounded-3xl 
-                        px-2 py-1 mr-6"
-                            type="text"
-                            placeholder="Search Meals"
-                        />
-                        <IoIosSearch className="inline -ml-14" color="Gray" />
-                    </div>
-                    {/* <Link
-                        href="/select-a-plan"
-                        className="bg-green-800 px-10 
-                        pt-1 pb-2 
-                        rounded-3xl 
-                        mr-2 text-white"
-                    >
-                        Become a meal Provider
-                    </Link> */}
                     {user ? (
                         <DropdownMenu>
                             <DropdownMenuTrigger>
