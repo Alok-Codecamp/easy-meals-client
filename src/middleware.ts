@@ -18,7 +18,7 @@ export const middleware = async (request: NextRequest) => {
 
             return NextResponse.redirect(
                 new URL(
-                    `http://localhost:3000/login?redirectPath=${pathname}`,
+                    `https://easy-meals-silk.vercel.app/login?redirectPath=${pathname}`,
                     request.url
                 )
             );

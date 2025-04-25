@@ -22,17 +22,10 @@ export const CustomerNavMenuItem = [
         icon: GiMeal,
         isActive: true,
         items: [
+
             {
-                title: "Daily Plan",
-                url: "daily-meal-plan",
-            },
-            {
-                title: "Weekly-Plan",
-                url: "weekly-meal-plan",
-            },
-            {
-                title: "Monthly Plan",
-                url: "monthly-meal-plan",
+                title: "Set Preference",
+                url: "#",
             },
         ],
     },
@@ -86,16 +79,12 @@ export const providerNavMenuItem = [
     },
     {
         title: "Manage Orders",
-        baseUrl: "/provider",
+        baseUrl: "/dashboard/provider",
         icon: BsCartCheckFill,
         items: [
             {
-                title: "All Orders",
-                url: "all-orders",
-            },
-            {
-                title: "Confirm Orders",
-                url: "confirm-orders",
+                title: "Order Response",
+                url: "responses",
             },
 
 
@@ -113,7 +102,7 @@ export const providerNavMenuItem = [
             // {
             //     title: "Change Password",
             //     url: "change-password",
-            // },
+            // }
 
 
         ]

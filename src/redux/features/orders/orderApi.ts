@@ -17,9 +17,15 @@ const mealApi = baseApi.injectEndpoints({
                 method: "GET",
 
             })
-        })
+        }),
 
-
+        updateOrder: builder.mutation({
+            query: (orderData) => ({
+                url: `/orders/update-order/${orderData.orderId}`,
+                method: 'POST',
+                body: orderData
+            })
+        }),
 
     })
 })
@@ -29,4 +35,5 @@ const mealApi = baseApi.injectEndpoints({
 export const {
     useCreateOrderMutation,
     useGetCustomerOrdersQuery,
+    useUpdateOrderMutation,
 } = mealApi;
