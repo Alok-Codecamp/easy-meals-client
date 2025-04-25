@@ -5,7 +5,6 @@ import { useAppSelector } from "@/redux/hooks";
 import { DecodedUser } from "@/types/auth.types";
 import {
     Card,
-    CardContent,
     CardDescription,
     CardFooter,
     CardHeader,
@@ -18,7 +17,6 @@ import { useGetMyMealProviderQuery } from "@/redux/features/mealProviders/mealPr
 import { IMeal } from "@/types/meal";
 import { useGetAllMealQuery } from "@/redux/features/meals/mealApi";
 import { skipToken } from "@reduxjs/toolkit/query";
-import { Item } from "@radix-ui/react-dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const UpdateMealPage = () => {
@@ -33,13 +31,13 @@ const UpdateMealPage = () => {
         <div className="grid md:grid-cols-3 gap-4 px-6">
 
             {
-                !mealData ? [1, 2, 3, 4, 5, 6].map((Item, index) => (<div key={index} className="flex flex-col space-y-3 ">
+                !mealData ? [1, 2, 3, 4, 5, 6].map((item) => (<div key={item} className="flex flex-col space-y-3 ">
                     <Skeleton className="h-[225px] w-[250px] rounded-xl bg-gray-400" />
                     <div className="space-y-2">
                         <Skeleton className="h-8 w-[250px] bg-gray-400" />
                         <Skeleton className="h-8 w-[200px] bg-gray-400" />
                     </div>
-                </div>)) : mealData?.data?.map((item: IMeal, index: number) => (
+                </div>)) : mealData?.data?.map((item: IMeal) => (
                     <Card key={item?._id} className=" py-2 px-2">
                         <CardHeader>
                             <Image

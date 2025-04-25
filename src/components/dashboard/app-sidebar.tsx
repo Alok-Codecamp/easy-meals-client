@@ -9,21 +9,12 @@ import {
 import { NavMain } from "../dashboard/nav-main";
 import { NavUser } from "../dashboard/nav-user";
 import { DecodedUser } from "@/types/auth.types";
-import { GiMeal } from "react-icons/gi";
 import { CustomerNavMenuItem, NavMenuItem, providerNavMenuItem } from "./constants/sidebarMenuItems";
 import Image from "next/image";
 import Link from "next/link";
 
-// This is sample data.
-const data = {
-    teams: [
-        {
-            name: "Easy Meals",
-            logo: GiMeal,
-            plan: "Build your meal plan",
-        },
-    ],
-};
+
+
 
 export function AppSidebar({
     user,

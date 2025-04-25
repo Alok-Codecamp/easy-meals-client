@@ -6,7 +6,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { HiBars3BottomRight } from "react-icons/hi2";
-import { IoIosSearch } from "react-icons/io";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -15,12 +14,11 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import avatar from '@/assets/selectMeals/clean-meal.png'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { deleteCoockies } from "@/services/auth/auth";
 import { prodetectedRoutes } from "@/constants";
 import { DecodedUser } from "@/types/auth.types";
-import { Button } from "../ui/button";
+
 
 const NavBar = () => {
     const [open, setOpen] = useState(false);

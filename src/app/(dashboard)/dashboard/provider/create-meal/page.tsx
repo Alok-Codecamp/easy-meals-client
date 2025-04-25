@@ -8,7 +8,7 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ClockLoader } from "react-spinners";
@@ -48,7 +48,7 @@ const CreateMealPage = () => {
 
 
 
-    const onSubmit: SubmitHandler<TMeal> = async (data: any) => {
+    const onSubmit: SubmitHandler<TMeal> = async (data) => {
         data.providerId = providerData?.data[0]?._id
 
 
@@ -63,15 +63,15 @@ const CreateMealPage = () => {
                 toast.error((resposneData as any)?.error?.data?.message, { id: toastId });
             }
         } catch (err: any) {
-            toast.error("faild to create meal ", { id: toastId });
+            toast.error(err.message || "faild to create meal ", { id: toastId });
         }
     };
     return (
         <div className="mx-20 py-4">
             <h1 className="text-green-800 text-3xl mb-10 font-bold">
-                Create Meal That's you wnat to offer our customer
+                Create Meal That&apos;s you want to offer our customer
             </h1>
-            <div className="">
+            <div>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <FormField
@@ -81,7 +81,7 @@ const CreateMealPage = () => {
                                 <FormItem>
                                     <FormLabel>Title</FormLabel>
                                     <FormControl>
-                                        <Input {...field} value={field.value} className="" />
+                                        <Input {...field} value={field.value} className="border-2 border-gray-400" />
                                     </FormControl>
                                     <FormDescription>
                                         Your meal title
@@ -102,7 +102,7 @@ const CreateMealPage = () => {
                                             <Input
                                                 {...field}
                                                 value={field.value}
-                                                className=""
+                                                className="border-2 border-gray-400"
                                             />
                                         </FormControl>
                                         <FormDescription>
@@ -125,7 +125,7 @@ const CreateMealPage = () => {
                                             <Input
                                                 {...field}
                                                 value={field.value}
-                                                className=""
+                                                className="border-2 border-gray-400"
                                             />
                                         </FormControl>
                                         <FormDescription>Mention your meal price</FormDescription>
@@ -145,7 +145,7 @@ const CreateMealPage = () => {
                                             <Input
                                                 {...field}
                                                 value={field.value}
-                                                className=""
+                                                className="border-2 border-gray-400"
                                             />
                                         </FormControl>
                                         <FormDescription>Provide your meal Image URl</FormDescription>
@@ -165,7 +165,7 @@ const CreateMealPage = () => {
                                             <Input
                                                 {...field}
                                                 value={field.value}
-                                                className=""
+                                                className="border-2 border-gray-400"
                                             />
                                         </FormControl>
                                         <FormDescription>How meny time to take prepeare the meal</FormDescription>
@@ -198,7 +198,7 @@ const CreateMealPage = () => {
                                                             className="flex flex-row items-start space-x-3 space-y-0"
                                                         >
                                                             <FormControl>
-                                                                <Checkbox
+                                                                <Checkbox className="border-2 border-gray-400"
                                                                     checked={field.value?.includes(item.id)}
                                                                     onCheckedChange={(checked) => {
                                                                         return checked
@@ -249,7 +249,7 @@ const CreateMealPage = () => {
                                                             className="flex flex-row items-start space-x-3 space-y-0"
                                                         >
                                                             <FormControl>
-                                                                <Checkbox
+                                                                <Checkbox className="border-2 border-gray-400"
                                                                     checked={field.value?.includes(item.id)}
                                                                     onCheckedChange={(checked) => {
                                                                         return checked
@@ -300,7 +300,7 @@ const CreateMealPage = () => {
                                                             className="flex flex-row items-start space-x-3 space-y-0"
                                                         >
                                                             <FormControl>
-                                                                <Checkbox
+                                                                <Checkbox className="border-2 border-gray-400"
                                                                     checked={field.value?.includes(item.id)}
                                                                     onCheckedChange={(checked) => {
                                                                         return checked
@@ -351,7 +351,7 @@ const CreateMealPage = () => {
                                                             className="flex flex-row items-start space-x-3 space-y-0"
                                                         >
                                                             <FormControl>
-                                                                <Checkbox
+                                                                <Checkbox className="border-2 border-gray-400"
                                                                     checked={field.value?.includes(item.id)}
                                                                     onCheckedChange={(checked) => {
                                                                         return checked

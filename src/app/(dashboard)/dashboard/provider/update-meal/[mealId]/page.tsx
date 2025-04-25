@@ -36,7 +36,7 @@ const SelectedMealUpdatePage = () => {
     const currentUser = useAppSelector(selectCurrentUser) as DecodedUser;
     const { data: providerData } = useGetMyMealProviderQuery(currentUser?.id);
     const { data: mealRespone, isLoading } = useGetMealByIdQuery(mealId)
-    const [updateMeal, { isSuccess }] = useUpdateMealMutation();
+    const [updateMeal] = useUpdateMealMutation();
     const meal = mealRespone?.data;
     console.log(meal);
 
@@ -70,9 +70,9 @@ const SelectedMealUpdatePage = () => {
             portion: meal?.portion,
             isAvailable: meal?.isAvailable,
         })
-    }, [meal])
-    const onSubmit: SubmitHandler<TMeal> = async (data: any) => {
-        const filteredObject = Object.fromEntries(Object.entries(data).filter(([_, value]) => {
+    }, [meal, form])
+    const onSubmit: SubmitHandler<TMeal> = async (data) => {
+        const filteredObject = Object.fromEntries(Object.entries(data).filter(([, value]) => {
             if (typeof value === 'boolean') {
                 return true
             }
@@ -99,7 +99,8 @@ const SelectedMealUpdatePage = () => {
                 toast.error((resposneData as any)?.error?.data?.message, { id: toastId });
             }
         } catch (err: any) {
-            toast.error("faild to create meal ", { id: toastId });
+
+            toast.error(err.message || "faild to create meal ", { id: toastId });
         }
     };
     return (
@@ -108,9 +109,9 @@ const SelectedMealUpdatePage = () => {
                 isLoading ? <p>Loading data....</p> :
                     <div className="mx-20 py-4">
                         <h1 className="text-green-800 text-3xl mb-10 font-bold">
-                            Create Meal That's you wnat to offer our customer
+                            Create Meal That&apos;s you wnat to offer our customer
                         </h1>
-                        <div className="">
+                        <div>
                             <Form {...form}>
                                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                                     <FormField

@@ -1,6 +1,5 @@
 import { GiMeal } from "react-icons/gi";
 import { BsCartCheckFill } from "react-icons/bs";
-import { PiBowlFoodFill } from "react-icons/pi";
 import { IconType } from "react-icons";
 
 export type NavSubItem = {
@@ -39,25 +38,27 @@ export const CustomerNavMenuItem = [
     },
     {
         title: "Tracking Orders",
-        baseUrl: "/customer",
+        baseUrl: "/dashboard/customer",
         icon: BsCartCheckFill,
         items: [
             {
-                title: "All Orders",
-                url: "#",
+                title: "Order Status",
+                url: "track-orders",
             },
+
+
+        ],
+    },
+    {
+        title: "Profile",
+        baseUrl: "/profile",
+        icon: BsCartCheckFill,
+        items: [
             {
-                title: "Deliverd",
-                url: "#",
+                title: "Edit Profile",
+                url: "customer",
             },
-            {
-                title: "In-Progress",
-                url: "#",
-            },
-            {
-                title: "Pending",
-                url: "#"
-            }
+
         ],
     },
 

@@ -1,13 +1,13 @@
 import { logOut, setUser } from "@/redux/features/auth/authSlice";
 import { RootState } from "@/redux/store";
-import { BaseQueryApi, DefinitionType, createApi, FetchArgs, fetchBaseQuery, BaseQueryFn, FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
+import { BaseQueryApi, DefinitionType, createApi, FetchArgs, fetchBaseQuery, BaseQueryFn } from "@reduxjs/toolkit/query/react";
 
 
-
+// http://localhost:5000 
 
 // https://easy-meals-server.onrender.com
 const baseQuery = fetchBaseQuery({
-    baseUrl: 'http://localhost:5000',
+    baseUrl: 'https://easy-meals-server.onrender.com',
     credentials: 'include',
     prepareHeaders: (headers, { getState }) => {
         const token = (getState() as RootState).auth.token;
@@ -24,7 +24,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<FetchArgs, BaseQueryApi, Definition
     console.log(result);
     // https://easy-meals-server.onrender.com
     if ((result as any)?.error?.status === 500) {
-        const res = await fetch('http://localhost:5000/auth/refresh', {
+        const res = await fetch('https://easy-meals-server.onrender.com/auth/refresh', {
             method: 'POST',
             credentials: 'include'
         });

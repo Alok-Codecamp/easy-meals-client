@@ -1,5 +1,5 @@
 import { baseApi } from "@/redux/api/baseApi/baseApi";
-import { TQueryParam, TReduxResponse, TResponseData } from "@/types/query";
+import { TQueryParam } from "@/types/query";
 
 
 const providerApi = baseApi.injectEndpoints({

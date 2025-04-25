@@ -1,6 +1,6 @@
 import { RootState } from "@/redux/store";
 import { createSlice } from "@reduxjs/toolkit";
-import { cookies } from "next/headers";
+
 
 
 type TAuthState = {

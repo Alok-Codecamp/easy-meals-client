@@ -1,34 +1,33 @@
 "use client"
 import { Button } from "@/components/ui/button";
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
 import { useGetAllMealQuery } from "@/redux/features/meals/mealApi";
 import { IMeal } from "@/types/meal";
-import { IMealProvider } from "@/types/mealProvider";
+
 import Image from "next/image";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
 
 
 const CustomerPage = () => {
-    const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState("10");
-    const [sort, setSort] = useState("-price");
+    // const [page, setPage] = useState(1);
+    // const [limit, setLimit] = useState("10");
+    // const [sort, setSort] = useState("-price");
     const [search, setSearch] = useState("");
-    const [minPrice, setMinPrice] = useState(1);
-    const [maxPrice, setMaxPrice] = useState(1000);
-    const [isAvailable, setIsAvailable] = useState(true);
+    // const [minPrice, setMinPrice] = useState(1);
+    // const [maxPrice, setMaxPrice] = useState(1000);
+    // const [isAvailable, setIsAvailable] = useState(true);
     const queryArray = useMemo(() => {
         return [
-            { name: "limit", value: limit },
-            { name: "sort", value: sort },
-            { name: "page", value: page },
+            { name: "limit", value: 10 },
+            { name: "page", value: 1 },
             { name: "search", value: search },
 
         ];
-    }, [page, sort, limit, search,]);
+    }, [search]);
 
     const { data: mealData } = useGetAllMealQuery(queryArray)
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +43,7 @@ const CustomerPage = () => {
             </div>
             <div className="grid md:grid-cols-3 gap-4 px-6">
 
-                {mealData?.data?.map((item: IMeal, index: number) => (
+                {mealData?.data?.map((item: IMeal) => (
                     <Card key={item?._id} className=" py-2 px-2">
                         <CardHeader>
                             <Image

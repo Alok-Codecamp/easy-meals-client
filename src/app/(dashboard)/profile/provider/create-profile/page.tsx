@@ -2,12 +2,11 @@
 import { selectCurrentUser } from "@/redux/features/auth/authSlice";
 import {
     useGetMyProfileQuery,
-    useUpdateProfileMutation,
 } from "@/redux/features/user/userApi";
 import { useAppSelector } from "@/redux/hooks";
 import { DecodedUser } from "@/types/auth.types";
 import Image from "next/image";
-import React, { useState } from "react";
+import React from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -75,7 +74,7 @@ const CreateProviderProfilePage = () => {
 
             toast.success("Profile created successfull", { id: toastId });
         } catch (err: any) {
-            toast.error("something went wrong", { id: toastId });
+            toast.error(err.message || "something went wrong", { id: toastId });
         }
     };
     return (
@@ -88,16 +87,16 @@ const CreateProviderProfilePage = () => {
                         <div>
                             <h1 className="text-2xl text-green-800">
                                 Welcome {providerUserInfo?.name}! To get started, please
-                                complete your profile by providing the necessary information."
+                                complete your profile by providing the necessary information.
                             </h1>
                         </div>
-                        {/* <Image
+                        <Image
                             src="https://i.ibb.co.com/hxkN5fkR/Abstract-Profile-Photo-Instagram-Post.jpg"
                             alt="profile image"
                             width={100}
                             height={100}
                             unoptimized
-                        /> */}
+                        />
                     </div>
                     <div className="py-10">
                         <Form {...form}>
@@ -116,7 +115,7 @@ const CreateProviderProfilePage = () => {
                                     <div>
                                         {cuisineSpecialtiesFields.map(
                                             (cuisineSpecialtiesField, index) => (
-                                                <div id={cuisineSpecialtiesField?.id}>
+                                                <div key={cuisineSpecialtiesField?.id}>
                                                     <FormField
                                                         control={form.control}
                                                         name={`cuisineSpecialties.${index}.value`}

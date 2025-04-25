@@ -1,29 +1,27 @@
 "use client"
 import NavBar from "@/components/shared/NavBar"
 import styles from "./register.module.css"
-import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useRegisterMutation } from "@/redux/features/user/userApi";
 import { toast } from "sonner";
 import { ClockLoader } from "react-spinners";
 import Link from "next/link";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import verifyToken from "@/utils/verifyToken";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
-import { setUser } from "@/redux/features/auth/authSlice";
+import { selectCurrentUser, setUser } from "@/redux/features/auth/authSlice";
 import { useRouter } from "next/navigation";
 import z from 'zod';
 import { registerValidationSchema } from "./registerValidation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { setCurrentUserInCoockies } from "@/services/auth/auth";
+import { DecodedUser } from "@/types/auth.types";
 
 
 type FormValue = z.infer<typeof registerValidationSchema>;
 const RegisterPage = () => {
-    const [userRole, setUserRole] = useState('');
-    const [signup, { isLoading, error, isSuccess, isError }] = useRegisterMutation();
+    const curentUser = useAppSelector(selectCurrentUser) as DecodedUser
+    const [signup, { isLoading, error, isError }] = useRegisterMutation();
     const errorMessage = error && (error as any)?.data?.message;
 
     const [login] = useLoginMutation();
@@ -74,9 +72,9 @@ const RegisterPage = () => {
             <div className={`${styles.registerPageContainer}  flex justify-between items-center space-x-8 `}>
                 <div className=' bg-white/90 shadow-lg w-fit h-fit px-10 py-6 my-10 text-green-800 mx-auto rounded-md text-center'>
                     <h1 className='text-center text-2xl mx-2 my-4'>Sign Up</h1>
-                    <p className="text-left h-1 mb-16">Let's start a awsome journey with Easy Meals</p>
+                    <p className="text-left h-1 mb-16">Let&apos;s start a awsome journey with Easy Meals</p>
                     {
-                        isError ? <p className="text-red-800 text-sm text-center">{errorMessage}!</p> : <></>
+                        isError ? <p className="text-red-800 text-sm text-center">{errorMessage}!</p> : curentUser && <p className="text-red-800 text-sm text-center">Hey {curentUser?.name} You already loged in</p>
                     }
                     <form onSubmit={handleSubmit(onSumbimt)} className="">
                         <div className="md:flex justify-center items-center space-x-2">
@@ -126,7 +124,7 @@ const RegisterPage = () => {
                         <div className="flex justify-center items-center">
                             {
                                 isLoading ? <div className='text-center bg-green-900 my-2 h-8 w-64 md:w-80 rounded-md cursor-progress flex justify-center items-center'><ClockLoader
-                                    color='#d0d3d4' size={24} speedMultiplier={1.2} /></div> : <input className='bg-green-900 w-64 md:w-80 h-8 my-2 rounded-md cursor-pointer text-white' type="submit" value="Sign Up" />
+                                    color='#d0d3d4' size={24} speedMultiplier={1.2} /></div> : <input className='bg-green-900 w-64 md:w-80 h-8 my-2 rounded-md cursor-pointer text-white' type="submit" value="Sign Up" disabled={curentUser ? true : false} />
                             }
                         </div>
 

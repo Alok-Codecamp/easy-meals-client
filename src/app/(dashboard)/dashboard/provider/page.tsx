@@ -5,7 +5,6 @@ import { useAppSelector } from "@/redux/hooks";
 import { DecodedUser } from "@/types/auth.types";
 import {
     Card,
-    CardContent,
     CardDescription,
     CardFooter,
     CardHeader,
@@ -21,7 +20,7 @@ import { skipToken } from "@reduxjs/toolkit/query";
 
 const ProviderDashboard = () => {
     const userInfo = useAppSelector(selectCurrentUser) as DecodedUser;
-    const { data: providerData, isLoading } = useGetMyMealProviderQuery(userInfo?.id)
+    const { data: providerData } = useGetMyMealProviderQuery(userInfo?.id)
     const id = providerData?.data[0]?._id;
     console.log(id);
     const { data: mealData } = useGetAllMealQuery(id ? [{ name: 'providerId', value: id }] : skipToken)
@@ -31,7 +30,7 @@ const ProviderDashboard = () => {
             <h1 className="text-3xl text-green-900 text-center font-bold mt-6 mb-10">Meals You Offered</h1>
             <div className="grid md:grid-cols-3 gap-4 px-6">
 
-                {mealData?.data?.map((item: IMeal, index: number) => (
+                {mealData?.data?.map((item: IMeal) => (
                     <Card key={item?._id} className=" py-2 px-2">
                         <CardHeader>
                             <Image

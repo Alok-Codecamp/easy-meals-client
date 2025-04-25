@@ -15,6 +15,7 @@ export const middleware = async (request: NextRequest) => {
         if (authRoutes.includes(pathname)) {
             return NextResponse.next();
         } else {
+
             return NextResponse.redirect(
                 new URL(
                     `http://localhost:3000/login?redirectPath=${pathname}`,
@@ -54,7 +55,6 @@ export const config = {
     matcher: [
         "/dashboard",
         "/dashboard/:path*",
-        "/select-a-plan",
         "/profile/:path*",
         "/order-meal",
         "/order-meal/:path*",

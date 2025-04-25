@@ -20,28 +20,28 @@ import { IMealProvider } from "@/types/mealProvider";
 
 const FindMeal = () => {
     const [open, setOpen] = useState(false);
-    const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState("10");
-    const [sort, setSort] = useState("-price");
+    // const [page, setPage] = useState(1);
+    // const [limit, setLimit] = useState("10");
+    // const [sort, setSort] = useState("-price");
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState<string[]>([]);
     const [ratings, setRatings] = useState(1);
     const [tags, setTags] = useState<string[]>([]);
     const [providerId, setProviderId] = useState<string[]>([]);
-    const [isAvailable, setIsAvailable] = useState(true);
+    // const [isAvailable, setIsAvailable] = useState(true);
 
     const queryArray = useMemo(() => {
         return [
-            { name: "limit", value: limit },
-            { name: "sort", value: sort },
-            { name: "page", value: page },
+            { name: "limit", value: 10 },
+            { name: "sort", value: '-price' },
+            { name: "page", value: 1 },
             { name: "search", value: search },
             { name: "ratings", value: ratings },
             ...tags.map((item) => ({ name: "tags", value: item })),
             ...category.map((item) => ({ name: "category", value: item })),
             ...providerId.map((item) => ({ name: "providerId", value: item })),
         ];
-    }, [page, sort, limit, search, tags, category, ratings, providerId]);
+    }, [search, tags, category, ratings, providerId]);
     console.log(queryArray);
     const { data: mealData } = useGetAllMealQuery(queryArray);
     // query for all provider 
@@ -259,7 +259,7 @@ const FindMeal = () => {
                         </span></CollapsibleTrigger>
                         <CollapsibleContent>
                             {
-                                providerData?.data?.map((item: IMealProvider, index: number) => (
+                                providerData?.data?.map((item: IMealProvider) => (
                                     <div className="flex items-center space-x-2 my-3 ml-4" key={item._id}>
                                         <Checkbox onCheckedChange={(checked) => handleProviderChange(item._id, checked === true)} id={item.title} value={item._id} className="border-2 border-gray-400" />
                                         <label

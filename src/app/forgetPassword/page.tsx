@@ -74,7 +74,7 @@ const ForgetPasswordPage = () => {
 
                     <div className='text-left text-green-800'>
                         <Link className='text-green-800 text-sm my-4 ' href={'/login'} >click here for <span className=' underline decoration-2 decoration-green-200'>SignIn</span></Link>
-                        <p className='text-sm my-4 '>Don't have an account <Link className=' underline decoration-2 decoration-green-800' href={'/register'}>signup</Link></p>
+                        <p className='text-sm my-4 '>Don&apos;t have an account <Link className=' underline decoration-2 decoration-green-800' href={'/register'}>signup</Link></p>
                     </div>
 
                 </div>

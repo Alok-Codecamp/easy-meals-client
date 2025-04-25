@@ -1,5 +1,4 @@
 import { baseApi } from "@/redux/api/baseApi/baseApi";
-import { TQueryParam } from "@/types/query";
 
 
 
@@ -12,7 +11,13 @@ const mealApi = baseApi.injectEndpoints({
                 body: orderData
             })
         }),
+        getCustomerOrders: builder.query({
+            query: () => ({
+                url: "/orders/customers/orders",
+                method: "GET",
 
+            })
+        })
 
 
 
@@ -23,4 +28,5 @@ const mealApi = baseApi.injectEndpoints({
 
 export const {
     useCreateOrderMutation,
+    useGetCustomerOrdersQuery,
 } = mealApi;

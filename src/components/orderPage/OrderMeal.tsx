@@ -1,20 +1,16 @@
 "use client";
 import { useGetMealByIdQuery } from "@/redux/features/meals/mealApi";
-import { IMeal } from "@/types/meal";
 import Image from "next/image";
 import { Skeleton } from "../ui/skeleton";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";
 import { ClockLoader } from "react-spinners";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { CalendarIcon, Minus, Plus } from "lucide-react";
-import { Calendar } from "../ui/calendar";
+
+import { Minus, Plus } from "lucide-react";
 import { useAppSelector } from "@/redux/hooks";
 import { selectCurrentUser } from "@/redux/features/auth/authSlice";
 import { DecodedUser } from "@/types/auth.types";
@@ -55,23 +51,14 @@ const OrderMeal = ({ params }: { params: string }) => {
             schedule: new Date().toISOString().slice(0, 16),
         });
 
-    }, [meal]);
+    }, [meal, form]);
     useEffect(() => {
         if (meal?.price) {
             setMealPrice(Number(meal.price));
         }
     }, [meal]);
-    const availableDays = meal?.providerId?.availability;
-    const dayMap: Record<string, number> = {
-        sunday: 0,
-        monday: 1,
-        tuesday: 2,
-        wednesday: 3,
-        thursday: 4,
-        friday: 5,
-        saturday: 6,
-    };
-    const availableDayIndexes = availableDays?.map((day: string) => dayMap[day.toLowerCase()]);
+
+
 
     const handlePlus = () => {
         setMealQuantity(prev => {
@@ -107,7 +94,7 @@ const OrderMeal = ({ params }: { params: string }) => {
                 toast.error((resposneData as any)?.error?.data?.message, { id: toastId });
             }
         } catch (err: any) {
-            toast.error("faild to create meal ", { id: toastId });
+            toast.error(err.message || "faild to create meal ", { id: toastId });
         }
     };
     return (
@@ -409,38 +396,21 @@ const OrderMeal = ({ params }: { params: string }) => {
                                             name="schedule"
                                             render={({ field }) => (
                                                 <FormItem className="flex flex-col">
-                                                    <FormLabel className="text-md">{meal?.providerId?.title} Only Available on this day: {meal?.providerId?.availability.join(", ")} </FormLabel>
-                                                    <Popover>
-                                                        <PopoverTrigger asChild>
-                                                            <FormControl>
-                                                                <Button
-                                                                    variant={"outline"}
-                                                                    className={cn(
-                                                                        "w-[240px] pl-3 text-left font-normal",
-                                                                        !field.value && "text-muted-foreground"
-                                                                    )}
-                                                                >
-                                                                    {field.value ? (
-                                                                        format(field.value, "PPP")
-                                                                    ) : (
-                                                                        <span>Pick a date</span>
-                                                                    )}
-                                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                                </Button>
-                                                            </FormControl>
-                                                        </PopoverTrigger>
-                                                        <PopoverContent className="w-auto p-0" align="start">
-                                                            <Calendar
-                                                                mode="single"
-                                                                selected={field.value ? new Date(field.value) : undefined}
-                                                                onSelect={field.onChange}
-                                                                disabled={(date) => !availableDayIndexes.includes(date.getDay())}
-                                                                initialFocus
-                                                            />
-                                                        </PopoverContent>
-                                                    </Popover>
+                                                    <FormLabel className="text-md">
+                                                        {meal?.providerId?.title} Only Available on this day:{" "}
+                                                        {meal?.providerId?.availability.join(", ")}
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <input
+                                                            type="date"
+                                                            {...field}
+                                                            className="w-[240px] pl-3 text-left font-normal"
+                                                            min={new Date().toISOString().split('T')[0]} // Prevent selecting past dates
+                                                        // You can add a filter here to make sure only specific days are selectable
+                                                        />
+                                                    </FormControl>
                                                     <FormDescription>
-                                                        Please Peack a date when {meal?.providerId?.title} is available
+                                                        Please pick a date when {meal?.providerId?.title} is available.
                                                     </FormDescription>
                                                     <FormMessage />
                                                 </FormItem>

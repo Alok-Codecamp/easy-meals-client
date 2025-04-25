@@ -2,7 +2,6 @@
 import { selectCurrentUser } from "@/redux/features/auth/authSlice";
 import {
     useGetMyProfileQuery,
-    useUpdateProfileMutation,
 } from "@/redux/features/user/userApi";
 import { useAppSelector } from "@/redux/hooks";
 import { DecodedUser } from "@/types/auth.types";
@@ -89,7 +88,7 @@ const ProviderProfilePage = () => {
 
             toast.success("Profile update successfull", { id: toastId });
         } catch (err: any) {
-            toast.error("something went wrong", { id: toastId });
+            toast.error(err.message || "something went wrong", { id: toastId });
         }
     };
     return (

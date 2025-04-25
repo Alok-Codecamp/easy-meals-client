@@ -1,20 +1,15 @@
-
+"use client"
 import OrderMeal from "@/components/orderPage/OrderMeal";
 import NavBar from "@/components/shared/NavBar";
+import { useParams } from "next/navigation";
 
-type PageProps = {
-    params: {
-        mealId: string;
-    };
-};
-
-const Page = async ({ params }: PageProps) => {
-    const { mealId } = await params;
-
+const Page = () => {
+    const params = useParams();
+    const mealId = params.mealId;
     return (
         <div className="text-center">
             <NavBar />
-            <OrderMeal params={mealId} />
+            <OrderMeal params={mealId as string} />
         </div>
     );
 };

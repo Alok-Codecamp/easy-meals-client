@@ -5,7 +5,7 @@ import { useAppSelector } from "@/redux/hooks";
 import { DecodedUser } from "@/types/auth.types";
 import Image from "next/image";
 import React from "react";
-import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -27,7 +27,7 @@ export type FormValue = z.infer<typeof customerProfileformValidationSchema>;
 
 const CustomerProfilePage = () => {
     const userInfo = useAppSelector(selectCurrentUser) as DecodedUser;
-    const [updateUser, { error }] = useUpdateProfileMutation();
+    const [updateUser] = useUpdateProfileMutation();
     const { data: profileData, isLoading } = useGetMyProfileQuery(userInfo?.id);
 
 
@@ -66,7 +66,7 @@ const CustomerProfilePage = () => {
             toast.success('Profile update successfull', { id: toastId })
 
         } catch (err: any) {
-            toast.error('something went wrong', { id: toastId })
+            toast.error(err.message || 'something went wrong', { id: toastId })
         }
     };
     return (

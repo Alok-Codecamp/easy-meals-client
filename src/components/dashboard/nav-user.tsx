@@ -9,7 +9,6 @@ import { CgProfile } from "react-icons/cg";
 import {
     Avatar,
     AvatarFallback,
-    AvatarImage,
 } from "@/components/ui/avatar"
 import {
     DropdownMenu,

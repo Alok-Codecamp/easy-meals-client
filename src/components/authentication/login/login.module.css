@@ -1,5 +1,5 @@
-.resetPasswordcontainer {
-  background-image: url("../../assets/loginPage.png"),
+.loginPageContainer {
+  background-image: url("../../../assets/loginPage.png"),
     linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
   background-blend-mode: multiply;
   background-size: cover;
