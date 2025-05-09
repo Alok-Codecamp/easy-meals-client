@@ -7,6 +7,7 @@ import FindMeal from "@/components/findMeals/FindMeals"
 //                         
 import type { Metadata } from "next";
 
+// meta data for find meal page 
 export const generateMetadata = async (): Promise<Metadata> => {
     return {
         title: "Find Meals | EasyMeals",
