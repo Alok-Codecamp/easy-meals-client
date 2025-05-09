@@ -21,9 +21,9 @@ const mealApi = baseApi.injectEndpoints({
 
         updateOrder: builder.mutation({
             query: (orderData) => ({
-                url: `/orders/update-order/${orderData.orderId}`,
-                method: 'POST',
-                body: orderData
+                url: `/orders/update-order${orderData.orderId}`,
+                method: 'PUT',
+                body: orderData.data
             })
         }),
 

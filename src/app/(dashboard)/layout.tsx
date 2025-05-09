@@ -10,20 +10,22 @@ import {
 import { selectCurrentUser } from "@/redux/features/auth/authSlice"
 import { useAppSelector } from "@/redux/hooks"
 import { DecodedUser } from "@/types/auth.types"
+
 import { ReactNode } from "react"
+
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
     const userInfo = useAppSelector(selectCurrentUser) as DecodedUser;
 
     return (
         <SidebarProvider>
-            <AppSidebar user={userInfo} />
+            <AppSidebar />
             <SidebarInset>
                 <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
                     <div className="flex items-center gap-2 px-4">
                         <SidebarTrigger className="-ml-1" />
                         <Separator orientation="vertical" className="mr-2 h-4" />
-                        <h1 className="text-2xl font-bold text-green-900">{userInfo?.role === 'customer' ? 'Customer Dashboard' : 'Meal Provider Dashboard'}</h1>
+                        <h1 className="text-2xl font-bold text-green-900">Dashboard</h1>
                     </div>
                 </header>
                 <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" >

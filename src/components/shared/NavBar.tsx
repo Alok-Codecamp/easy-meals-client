@@ -20,18 +20,24 @@ import { prodetectedRoutes } from "@/constants";
 import { DecodedUser } from "@/types/auth.types";
 
 
+
 const NavBar = () => {
     const [open, setOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
     const user = useAppSelector(selectCurrentUser) as DecodedUser;
     const dispatch = useAppDispatch();
     const pathname = usePathname();
     const router = useRouter();
     const [isMounted, setIsMounted] = useState(false);
-
     useEffect(() => {
         setIsMounted(true);
+        const handleScrolled = () => {
+            setScrolled(window.scrollY > 10)
+        }
+        window.addEventListener('scroll', handleScrolled)
+        return () => window.removeEventListener('scroll', handleScrolled)
     }, []);
-
+    // handle logout function 
     const handleLogOut = async () => {
         await deleteCoockies();
         dispatch(logOut());
@@ -39,23 +45,29 @@ const NavBar = () => {
             router.push('/')
         }
     };
-    if (!isMounted || status === 'loading') return null;
+
+
     return (
-        <nav className="py-2 md:py-6 md:shadow-sm">
+        <nav className={`${!scrolled && 'pt-2'} md:shadow-sm sticky top-0 bg-[#004B22]`}>
+
             {/* desktop menu  */}
-            <section className="container mx-auto px-2  flex justify-between items-center">
+            <section className={` container mx-auto px-2  flex justify-between items-center ${scrolled && 'hidden'} text-white`}>
                 {/* nav Items  */}
-                <div className="flex justify-center items-center space-x-12">
-                    <Link className="border " href="/">
+
+                <div className="flex justify-center items-center">
+                    <Link className=" " href="/">
                         <Image
-                            src="/logo.png"
+                            src="/logo.svg"
                             alt="logo"
-                            width={200}
+                            width={0}
                             height={0}
-                            sizes="100vw"
+                            unoptimized
+                            style={{ height: '80px', width: "80px" }}
                         />
                     </Link>
-                    <ul className="hidden lg:flex space-x-6">
+
+
+                    <ul className="hidden lg:flex space-x-10 mx-10">
                         <li>
                             <Link href="/find-meals">Find Meals</Link>
                         </li>
@@ -67,7 +79,7 @@ const NavBar = () => {
 
 
                         <li>
-                            {user && (
+                            {isMounted && user && (
                                 <Link href={user.role === 'mealProvider' ? '/dashboard/provider' : '/dashboard/customer'}>
                                     Dashboard
                                 </Link>
@@ -79,16 +91,17 @@ const NavBar = () => {
 
                     </ul>
                 </div>
+
+
                 {/* search and Login  */}
-                <div className="hidden lg:flex justify-center items-center">
-                    {user ? (
+                <div className="hidden lg:block">
+                    {isMounted && user ? (
                         <DropdownMenu>
                             <DropdownMenuTrigger>
                                 <Avatar>
                                     <AvatarImage src="https://github.com/shadcn.png" />
-                                    <AvatarFallback>AB</AvatarFallback>
+                                    <AvatarFallback>Profile</AvatarFallback>
                                 </Avatar>
-
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -120,7 +133,23 @@ const NavBar = () => {
                 >
                     <HiBars3BottomRight size={36} />
                 </button>
+
             </section>
+            <ul className={`flex justify-start items-center space-x-20 mt-1 bg-gray-200 py-2 px-16 ${scrolled && 'hidden'}`}>
+                <li>
+
+
+
+
+
+                </li>
+
+                <li>STANDARD</li>
+                <li>SUBSCRIPTION</li>
+                <li>PARTY MENU</li>
+                <li>DIET</li>
+            </ul>
+
             {/* mobile menu  */}
             {open && (
                 <section
@@ -139,11 +168,26 @@ const NavBar = () => {
                         />
                     </div>
                     <ul className=" text-xl ">
-                        <li className="my-4">Weekly Meny</li>
-                        <li className="my-4">Plans</li>
-                        <li className="my-4">About Us</li>
-                        <li className="my-4">Reviews</li>
-                        <li className="my-4">FAQs</li>
+                        <li>
+                            <Link href="/find-meals">Find Meals</Link>
+                        </li>
+
+                        <li>
+                            <Link href='/our-cehfs'>Our Chefs</Link>
+                        </li>
+
+
+
+                        <li>
+                            {user && (
+                                <Link href={user.role === 'mealProvider' ? '/dashboard/provider' : '/dashboard/customer'}>
+                                    Dashboard
+                                </Link>
+                            )}
+                        </li>
+                        <li>
+                            <Link href={"about-us"}>About Us</Link>
+                        </li>
                         <li className="my-4">
                             {user ? (
                                 <DropdownMenu>
@@ -166,6 +210,23 @@ const NavBar = () => {
                                 </Link>
                             )}
                         </li>
+                    </ul>
+                </section>
+            )}
+            {scrolled && (
+                <section className="bg-[#004B22] py-2 px-16 animate-in slide-in-from-top transition-all duration-500">
+
+                    <ul className="flex justify-start items-center space-x-24 text-white">
+                        <li>meal</li>
+                        <li>meal</li>
+                        <li>meal</li>
+                        <li>meal</li>
+                        <li>meal</li>
+                        <li>meal</li>
+                        <li>meal</li>
+                        <li>meal</li>
+                        <li>meal</li>
+                        <li>meal</li>
                     </ul>
                 </section>
             )}

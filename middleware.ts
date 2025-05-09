@@ -1,33 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser } from "./services/auth/auth";
+import { DecodedUser } from "./src/types/auth.types";
+import verifyToken from "./src/utils/verifyToken";
 
+// https://easy-meals-silk.vercel.app
 const authRoutes = ["/login", "/register"];
 const roleBaseAccess = {
     customer: [/^\/dashboard/, /^\/profile/, /^\/order-meal/],
     mealProvider: [/^\/dashboard/, /^\/profile/],
 };
-
+console.log('hello m');
 export const middleware = async (request: NextRequest) => {
     const { pathname } = request.nextUrl;
-    const userInfo = await getCurrentUser();
-
+    const token: string | undefined = request.cookies.get("refreshToken")?.value
+    const userInfo = verifyToken(token as string) as DecodedUser
+    console.log(userInfo);
     if (!userInfo) {
         if (authRoutes.includes(pathname)) {
             return NextResponse.next();
         } else {
 
             return NextResponse.redirect(
-                new URL(
-                    `https://easy-meals-silk.vercel.app/login?redirectPath=${pathname}`,
-                    request.url
-                )
-            );
+                new URL(`/login?redirectPath=${pathname}`, request.url));
         }
     }
 
     if (userInfo?.role && roleBaseAccess[userInfo?.role]) {
         const routes = roleBaseAccess[userInfo?.role];
-
+        console.log(userInfo);
         if (
             routes.some((route) => {
                 return pathname.match(route);

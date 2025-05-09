@@ -12,15 +12,15 @@ import { DecodedUser } from "@/types/auth.types";
 import { CustomerNavMenuItem, NavMenuItem, providerNavMenuItem } from "./constants/sidebarMenuItems";
 import Image from "next/image";
 import Link from "next/link";
+import { useAppSelector } from "@/redux/hooks";
+import { selectCurrentUser } from "@/redux/features/auth/authSlice";
 
 
 
 
-export function AppSidebar({
-    user,
-    ...props
-}: { user: DecodedUser | null } & React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const navMain: NavMenuItem[] = [];
+    const user = useAppSelector(selectCurrentUser) as DecodedUser;
     // logic for user dashboard sidebar menu item 
     if (user?.role === "customer") {
         CustomerNavMenuItem.map((item) => navMain.push(item as NavMenuItem));
@@ -49,7 +49,7 @@ export function AppSidebar({
                 <NavMain items={navMain} />
             </SidebarContent>
             <SidebarFooter>
-                <NavUser user={user} />
+                <NavUser />
             </SidebarFooter>
             <SidebarRail />
         </Sidebar>

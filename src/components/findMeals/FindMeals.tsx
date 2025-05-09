@@ -43,7 +43,7 @@ const FindMeal = () => {
         ];
     }, [search, tags, category, ratings, providerId]);
     console.log(queryArray);
-    const { data: mealData } = useGetAllMealQuery(queryArray);
+    const { data: mealData, isLoading } = useGetAllMealQuery(queryArray);
     // query for all provider 
     const { data: providerData } = useGetAllMealProviderQuery([])
     // handle search item   
@@ -297,37 +297,36 @@ const FindMeal = () => {
                     <IoIosSearch size={24} className="-ml-10 mt-2" />
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-4 px-6 py-10">
-                    {mealData?.data?.map((item: IMeal) => (
-                        <Card key={item?._id} className="py-2 px-2">
-                            <CardHeader>
-                                <Image
-                                    src={item?.image}
-                                    alt="meal image"
-                                    width={0}
-                                    height={0}
-                                    unoptimized
-                                    priority
-                                    sizes="100vw"
-                                    className="rounded-md w-[320px] h-auto"
-                                />
-                                <CardTitle className="my-2 text-green-900">{item?.title}</CardTitle>
-                                <CardDescription className="text-md text-green-900">Price: {item?.price}</CardDescription>
-                                <CardDescription className="text-md text-green-900">Category: {item?.category}</CardDescription>
-                                <CardDescription className="text-md text-green-900">Preparation Time: {item?.preparationTime}</CardDescription>
-                                <CardDescription className="text-md text-green-900">Is Available: {item.isAvailable ? "Yes" : "No"}</CardDescription>
-                            </CardHeader>
-                            <CardFooter className="flex justify-between">
-                                <Link href={`/view-meal-details/${item._id}`}>
-                                    <Button>View Details</Button>
-                                </Link>
-                                <Link href={`/order-meal/${item._id}`}>
-                                    <Button>Order Now</Button>
-                                </Link>
-                            </CardFooter>
-                        </Card>
-                    ))}
-                </div>
+                {isLoading ? <p>Loading meal data..</p> :
+                    <div className="grid md:grid-cols-3 gap-4 px-6 py-10">
+                        {mealData?.data?.map((item: IMeal) => (
+                            <Card key={item?._id} className="py-2 px-2">
+                                <CardHeader>
+                                    <Image
+                                        src={item?.image}
+                                        alt="meal image"
+                                        width={0}
+                                        height={0}
+                                        unoptimized
+                                        priority
+                                        sizes="100vw"
+                                        className="rounded-md w-[320px] h-auto"
+                                    />
+                                    <CardTitle className="my-2 text-green-900">{item?.title}</CardTitle>
+                                    <CardDescription className="text-md text-green-900">Price: {item?.price}</CardDescription>
+                                    <CardDescription className="text-md text-green-900">Category: {item?.category}</CardDescription>
+                                    <CardDescription className="text-md text-green-900">Preparation Time: {item?.preparationTime}</CardDescription>
+                                    <CardDescription className="text-md text-green-900">Is Available: {item.isAvailable ? "Yes" : "No"}</CardDescription>
+                                </CardHeader>
+                                <CardFooter className="flex justify-between">
+                                    <Link href={`/order-meal/${item._id}`}>
+                                        <Button className="w-12/12">Order Now</Button>
+                                    </Link>
+                                </CardFooter>
+                            </Card>
+                        ))}
+                    </div>
+                }
             </div>
         </div>
     );

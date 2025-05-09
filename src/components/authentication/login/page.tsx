@@ -14,7 +14,7 @@ import NavBar from '@/components/shared/NavBar';
 import { loginValidationSchema } from './loginValidation';
 import { zodResolver } from '@hookform/resolvers/zod'
 import z from 'zod';
-import { setCurrentUserInCoockies } from '@/services/auth/auth';
+// import { setCurrentUserInCoockies } from '@/services/auth/auth';
 import { DecodedUser } from '@/types/auth.types';
 import { useLoginMutation } from '@/redux/features/auth/authApi';
 
@@ -47,21 +47,14 @@ const Login = () => {
                 const token = userData?.data?.data?.accessToken;
                 const userInfo = verifyToken(token)
                 dispatch(setUser({ user: userInfo, token: token }));
-                await setCurrentUserInCoockies(token)
+                // await setCurrentUserInCoockies(token)
                 toast.success('Login successfully', { id: toastId });
 
                 if (redirect) {
                     console.log('redirect');
                     router.push(redirect)
                 }
-                else if (userInfo && userInfo?.role === 'mealProvider') {
-                    console.log('provider');
-                    router.push('/dashboard/provider')
-                }
-                else if (userInfo && userInfo?.role === 'customer') {
-                    console.log('customer');
-                    router.push('/dashboard/customer')
-                }
+
                 else {
                     router.push('/')
                 }

@@ -18,14 +18,14 @@ export type NavMenuItem = {
 export const CustomerNavMenuItem = [
     {
         title: "Select Meal Plan",
-        baseUrl: "/customer",
+        baseUrl: "/dashboard/customer",
         icon: GiMeal,
         isActive: true,
         items: [
 
             {
                 title: "Set Preference",
-                url: "#",
+                url: "set-preference",
             },
         ],
     },

@@ -5,9 +5,9 @@ import { BaseQueryApi, DefinitionType, createApi, FetchArgs, fetchBaseQuery, Bas
 
 // http://localhost:5000 
 
-// https://easy-meals-server.onrender.com
+// https://easy-meals-server.vercel.app
 const baseQuery = fetchBaseQuery({
-    baseUrl: 'https://easy-meals-server.onrender.com',
+    baseUrl: 'https://easy-meals-server.vercel.app',
     credentials: 'include',
     prepareHeaders: (headers, { getState }) => {
         const token = (getState() as RootState).auth.token;
@@ -24,7 +24,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<FetchArgs, BaseQueryApi, Definition
     console.log(result);
     // https://easy-meals-server.onrender.com
     if ((result as any)?.error?.status === 500) {
-        const res = await fetch('https://easy-meals-server.onrender.com/auth/refresh', {
+        const res = await fetch('https://easy-meals-server.vercel.app/auth/refresh', {
             method: 'POST',
             credentials: 'include'
         });

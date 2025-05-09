@@ -20,10 +20,10 @@ import Link from 'next/link';
 const Home = () => {
     return (
         <main>
-
+            <NavBar />
             <header>
                 {/* nav bar section  */}
-                <NavBar />
+
                 {/* banner section  */}
                 <section className=''>
                     <div className='hidden lg:block'>
@@ -65,7 +65,7 @@ const Home = () => {
                     <Card className='w-66 h-fit py-0'>
                         <CardHeader className='text-center'>
                             <div className='my-0'>
-                                <Image src={cardImg1} alt='meal image' width={260} height={100} />
+                                <Image src={cardImg1} alt='meal image' width={0} height={0} style={{ height: '100px', width: '260px' }} />
                             </div>
                             <CardTitle className='text-2xl font-bold text-gray-800 my-4'>Fresh meals & flavors</CardTitle>
                             <CardDescription className='text-gray-700 text-lg'>Get delicious, high-protein meals crafted by chefs and dietitians to support all diets.</CardDescription>
@@ -75,7 +75,7 @@ const Home = () => {
                     <Card className='w-66 py-0'>
                         <CardHeader className='text-center'>
                             <div className=''>
-                                <Image src={cardImg2} alt='meal image' width={260} height={100} />
+                                <Image src={cardImg2} alt='meal image' width={0} height={0} style={{ height: '100px', width: '260px' }} />
                             </div>
                             <CardTitle className='text-2xl font-bold text-gray-800 my-4'>Organic Ingredients</CardTitle>
                             <CardDescription className='text-gray-700 text-lg'>Low sodium & macro balanced meals with ingredients sourced according the highest standards.</CardDescription>
@@ -85,7 +85,7 @@ const Home = () => {
                     <Card className='w-66 py-0'>
                         <CardHeader className='text-center'>
                             <div className=''>
-                                <Image src={cardImg3} alt='meal image' width={260} height={100} />
+                                <Image src={cardImg3} alt='meal image' width={0} height={0} style={{ height: '100px', width: '260px' }} />
                             </div>
                             <CardTitle className='text-2xl font-bold text-gray-800 my-4'>All the tools for fitness</CardTitle>
                             <CardDescription className='text-gray-700 text-lg'>Download our ground breaking app for a personalized plan and intuitive weight loss tools.</CardDescription>

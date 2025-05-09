@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import z from 'zod';
 import { registerValidationSchema } from "./registerValidation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { setCurrentUserInCoockies } from "@/services/auth/auth";
+
 import { DecodedUser } from "@/types/auth.types";
 
 
@@ -52,7 +52,6 @@ const RegisterPage = () => {
             if (userInfo) {
                 toast.success('registration successfull', { id: toastId })
                 dispatch(setUser({ user: userInfo, token: token }))
-                await setCurrentUserInCoockies(token);
                 if (userInfo?.role === 'mealProvider') {
                     router.push('/profile/provider/create-profile')
                 } else {

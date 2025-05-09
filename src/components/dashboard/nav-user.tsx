@@ -34,17 +34,14 @@ import { usePathname, useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import Link from "next/link";
 
-export function NavUser({
-    user
-}: {
-    user: DecodedUser | null
-
-}) {
+export function NavUser() {
     const { isMobile } = useSidebar()
     const dispatch = useAppDispatch();
     const pathname = usePathname();
     const router = useRouter();
-    const userInfo = useAppSelector(selectCurrentUser) as DecodedUser;
+    // const userInfo = useAppSelector(selectCurrentUser) as DecodedUser;
+    const user = useAppSelector(selectCurrentUser) as DecodedUser;
+
     const handleLogOut = async () => {
         await deleteCoockies();
         dispatch(logOut());
@@ -97,7 +94,7 @@ export function NavUser({
                         <DropdownMenuGroup>
                             <DropdownMenuItem>
                                 <CgProfile />
-                                <Link href={userInfo?.role === "mealProvider" ? '/profile/provider' : '/profile/customer'}>Profile</Link>
+                                <Link href={user?.role === "mealProvider" ? '/profile/provider' : '/profile/customer'}>Profile</Link>
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />

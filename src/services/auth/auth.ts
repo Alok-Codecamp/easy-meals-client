@@ -27,17 +27,11 @@ export const loginUser = async (data: LoginData) => {
     }
     return serverResponse;
 }
-export const setCurrentUserInCoockies = async (token: string) => {
-    (await cookies()).set('accessToken', token, {
-        maxAge: 60 * 60 * 24,
 
-    })
-}
 
 export const getCurrentUser = async () => {
     const cookieStore = await cookies();
-    const tokenCookie = cookieStore.get('accessToken');
-
+    const tokenCookie = cookieStore.get('refreshToken');
     if (tokenCookie?.value) {
         const decodedData = verifyToken(tokenCookie.value);
         return decodedData as DecodedUser;
@@ -48,6 +42,9 @@ export const getCurrentUser = async () => {
 
 
 export const deleteCoockies = async () => {
-    (await cookies()).delete('accessToken');
     (await cookies()).delete('refreshToken');
 }
+
+
+
+

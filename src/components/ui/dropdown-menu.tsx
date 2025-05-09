@@ -21,6 +21,7 @@ function DropdownMenuPortal({
 }
 
 function DropdownMenuTrigger({
+  children,
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Trigger>) {
   return (
@@ -28,7 +29,7 @@ function DropdownMenuTrigger({
       className="cursor-pointer"
       data-slot="dropdown-menu-trigger"
       {...props}
-    />
+    >{children}</DropdownMenuPrimitive.Trigger>
   )
 }
 
