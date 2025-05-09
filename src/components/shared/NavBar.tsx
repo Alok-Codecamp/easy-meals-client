@@ -21,6 +21,7 @@ import { DecodedUser } from "@/types/auth.types";
 
 
 
+
 const NavBar = () => {
     const [open, setOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
@@ -65,6 +66,7 @@ const NavBar = () => {
                             style={{ height: '80px', width: "80px" }}
                         />
                     </Link>
+
 
 
                     <ul className="hidden lg:flex space-x-10 mx-10">
