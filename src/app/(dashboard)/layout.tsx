@@ -7,15 +7,13 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { selectCurrentUser } from "@/redux/features/auth/authSlice"
-import { useAppSelector } from "@/redux/hooks"
-import { DecodedUser } from "@/types/auth.types"
+
 
 import { ReactNode } from "react"
 
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
-    const userInfo = useAppSelector(selectCurrentUser) as DecodedUser;
+
 
     return (
         <SidebarProvider>

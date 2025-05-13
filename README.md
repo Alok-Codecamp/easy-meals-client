@@ -1,5 +1,6 @@
 # 🍱 Easy Meals
 
+**Live link**[https://easy-meals-silk.vercel.app/](https://easy-meals-silk.vercel.app/)
 **Easy Meals** is a full-stack meal subscription platform that connects **customers** with **meal providers**. It enables users to select meals based on dietary preferences, manage orders, and offers role-based dashboards for customers and providers. Built with **Next.js** and powered by a secure Express backend.
 
 ---

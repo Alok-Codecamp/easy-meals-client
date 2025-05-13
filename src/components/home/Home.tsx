@@ -1,11 +1,9 @@
+"use client"
 import NavBar from '../shared/NavBar';
 import Image from 'next/image';
 import bannerDesktop from '@/assets/banner-desktop.png';
 import bannerMobile from '@/assets/banner-mobile.png';
 import bannerTab from '@/assets/banner-tab.png';
-import cardImg1 from '@/assets//heighlight/cardImg1.png';
-import cardImg2 from '@/assets/heighlight/cardImg2.png';
-import cardImg3 from '@/assets/heighlight/cardImg3 .png';
 import banner2 from '@/assets/banner2.png';
 import easyStep1 from '@/assets/easyStep/step1.png'
 import easyStep2 from '@/assets/easyStep/step2.png'
@@ -17,7 +15,14 @@ import providerBnrM from '@/assets/provider-banner-mobile.png';
 import { Card, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import Footer from '../shared/Footer';
 import Link from 'next/link';
+import { useGetAllMealQuery } from '@/redux/features/meals/mealApi';
+import { IMeal } from '@/types/meal';
+import { Skeleton } from '../ui/skeleton';
+import { FaStar } from 'react-icons/fa6';
+
 const Home = () => {
+    const { data: mealData, isLoading } = useGetAllMealQuery([]);
+    console.log(mealData);
     return (
         <main>
             <NavBar />
@@ -27,7 +32,7 @@ const Home = () => {
                 {/* banner section  */}
                 <section className=''>
                     <div className='hidden lg:block'>
-                        <Image src={bannerDesktop} alt='dexktop' className='hidden lg:block h-[450px]' />
+                        <Image src={bannerDesktop} alt='dexktop' className='hidden lg:block h-[400px]' />
                         <Link
                             href='/register'
                             className=' ml-16 -translate-x-1/2 bg-green-800 px-10 py-2 rounded-3xl text-white font-bold text-xl'
@@ -59,38 +64,31 @@ const Home = () => {
 
             </header>
             {/* featured section  */}
-            <section className='my-10 text-center border mx-16'>
-                <h1 className='text-4xl font-bold text-gray-800'>A Higher Standard</h1>
-                <div className='md:flex justify-center space-x-16 items-center my-10'>
-                    <Card className='w-66 h-fit py-0'>
-                        <CardHeader className='text-center'>
-                            <div className='my-0'>
-                                <Image src={cardImg1} alt='meal image' width={0} height={0} style={{ height: '100px', width: '260px' }} />
-                            </div>
-                            <CardTitle className='text-2xl font-bold text-gray-800 my-4'>Fresh meals & flavors</CardTitle>
-                            <CardDescription className='text-gray-700 text-lg'>Get delicious, high-protein meals crafted by chefs and dietitians to support all diets.</CardDescription>
-                        </CardHeader>
+            <section className='my-10 text-center border mx-6 md:mx-16'>
+                <h1 className='text-2xl font-bold text-gray-800'>Hot Picks in Healthy Eating</h1>
+                <div className=' flex flex-col md:flex-row justify-center items-center space-x-4  my-10'>
+                    {isLoading ? <div><Skeleton /></div> :
+                        mealData?.data?.slice(0, 5).map((item: IMeal, index: number) => (
+                            <Link key={index} href={`/order-meal/${item._id}`}>
+                                <Card className='w-60 py-0 rounded-md'>
+                                    <CardHeader className='text-center'>
+                                        <Image src={item.image} alt='meal image' width={0} height={0} style={{ height: '150px', width: '250px' }} unoptimized className='rounded-md' />
+                                        <div className="flex justify-between items-center mx-2">
+                                            <p className=" text-green-900 text-sm font-bold">{item?.title}</p>
+                                            <p className=" text-green-900 font-bold flex items-center"><FaStar className='text-yellow-400' />{item?.ratings?.average}</p>
+                                        </div>
+                                        <div className="flex justify-between items-center mx-2">
+                                            <p className=" text-green-900 text-sm font-bold"></p>
+                                            <p className=" text-green-900 font-bold flex items-center"><FaStar className='text-yellow-400' />{ }</p>
+                                        </div>
 
-                    </Card>
-                    <Card className='w-66 py-0'>
-                        <CardHeader className='text-center'>
-                            <div className=''>
-                                <Image src={cardImg2} alt='meal image' width={0} height={0} style={{ height: '100px', width: '260px' }} />
-                            </div>
-                            <CardTitle className='text-2xl font-bold text-gray-800 my-4'>Organic Ingredients</CardTitle>
-                            <CardDescription className='text-gray-700 text-lg'>Low sodium & macro balanced meals with ingredients sourced according the highest standards.</CardDescription>
-                        </CardHeader>
+                                    </CardHeader>
 
-                    </Card>
-                    <Card className='w-66 py-0'>
-                        <CardHeader className='text-center'>
-                            <div className=''>
-                                <Image src={cardImg3} alt='meal image' width={0} height={0} style={{ height: '100px', width: '260px' }} />
-                            </div>
-                            <CardTitle className='text-2xl font-bold text-gray-800 my-4'>All the tools for fitness</CardTitle>
-                            <CardDescription className='text-gray-700 text-lg'>Download our ground breaking app for a personalized plan and intuitive weight loss tools.</CardDescription>
-                        </CardHeader>
-                    </Card>
+                                </Card>
+                            </Link>
+                        ))
+                    }
+
                 </div>
             </section>
 

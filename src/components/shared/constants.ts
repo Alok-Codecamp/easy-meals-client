@@ -1,43 +1,14 @@
-// export const customerNavBar = [
-//     {
-//         titel: 'Find Meals',
-//         url: '/find-meals',
-//     },
-//     {
-//         title: 'Order Meal',
-//         url: '/order-meal',
-//     },
-//     {
-//         title: 'Our Chef',
-//         url: 'all-provider'
-//     },
-//     {
-//         titel: 'About Us',
-//         url: 'about-us'
-//     },
-//     {
-//         title: 'Dashboard',
-//         url: '/dashboard/customer'
-//     }
-
-// ]
-
-// export const providerNavBar = [
-//     {
-//         title: 'Order Meal',
-//         url: '/order-meal',
-//     },
-//     {
-//         title: 'Our Chef',
-//         url: 'all-provider'
-//     },
-//     {
-//         titel: 'About Us',
-//         url: 'about-us'
-//     },
-//     {
-//         title: 'Dashboard',
-//         url: '/dashboard/customer'
-//     }
-
-// ]
+export const megaMenu = [
+    "Keto",
+    "Vegan",
+    "Vegetarian",
+    "Gluten-Free",
+    "Low-Carb",
+    "High-Protein",
+    "Paleo",
+    "Diabetic-Friendly",
+    "Dairy-Free",
+    "Organic",
+    "Low-Fat",
+    "Heart-Healthy"
+];

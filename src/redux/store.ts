@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '@/redux/features/auth/authSlice';
+import cartReducer from '@/redux/features/cart/cartSilse';
 import { persistStore, FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { baseApi } from './api/baseApi/baseApi';
@@ -7,14 +8,15 @@ import { baseApi } from './api/baseApi/baseApi';
 const persistConfig = {
     key: 'root',
     storage,
-}
+
+};
 const persistedReducer = persistReducer(persistConfig, authReducer)
 
 export const store = configureStore({
     reducer: {
         [baseApi.reducerPath]: baseApi.reducer,
         auth: persistedReducer,
-
+        cart: cartReducer
     },
     middleware: (getDefaultMiddlewares) => getDefaultMiddlewares({
         serializableCheck: {

@@ -17,6 +17,7 @@ import z from 'zod';
 // import { setCurrentUserInCoockies } from '@/services/auth/auth';
 import { DecodedUser } from '@/types/auth.types';
 import { useLoginMutation } from '@/redux/features/auth/authApi';
+import { Button } from '@/components/ui/button';
 
 type FormValue = z.infer<typeof loginValidationSchema>
 
@@ -34,9 +35,19 @@ const Login = () => {
     const {
         register,
         handleSubmit,
+        setValue,
+        trigger,
         formState: { errors, isSubmitting }
     } = useForm<FormValue>({ resolver: zodResolver(loginValidationSchema) });
 
+    const handleAutoLogin = async (contact: string, password: string) => {
+        setValue('contact', contact);
+        setValue('password', password);
+        const isValid = await trigger()
+        if (isValid) {
+            handleSubmit(onSumbimt)();
+        }
+    }
     const onSumbimt: SubmitHandler<FormValue> = async (data) => {
         const toastId = toast.loading('loging in...')
         try {
@@ -76,6 +87,10 @@ const Login = () => {
 
                 <div className=' bg-white/90 shadow-lg w-fit h-fit px-10 py-6 text-green-800 mx-auto rounded-md'>
                     <h1 className='text-center text-2xl mt-2 mb-6'>Sign In</h1>
+                    <div className='md:flex justify-center items-center space-x-2 my-2'>
+                        <Button onClick={() => handleAutoLogin('alok61.bd@gmail.com', '112233')}>Provider Credentials</Button>
+                        <Button onClick={() => handleAutoLogin('alokdas1dd@gmail.com', '112233')}>Customer Cridentials</Button>
+                    </div>
                     {
                         isError ? <p className="text-red-800 text-sm text-center my-2">{customeErrorState}!</p> : <></>
                     }

@@ -14,11 +14,14 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { deleteCoockies } from "@/services/auth/auth";
 import { prodetectedRoutes } from "@/constants";
 import { DecodedUser } from "@/types/auth.types";
-
+import SearchBar from "../searchBar/SearchBar";
+import { FaCartShopping } from "react-icons/fa6";
+import { megaMenu } from "./constants";
+import avatar from "@/assets/avatar.jpg"
+import { getMyCart } from "@/redux/features/cart/cartSilse";
 
 
 
@@ -30,6 +33,7 @@ const NavBar = () => {
     const pathname = usePathname();
     const router = useRouter();
     const [isMounted, setIsMounted] = useState(false);
+    const cart = useAppSelector(getMyCart);
     useEffect(() => {
         setIsMounted(true);
         const handleScrolled = () => {
@@ -49,27 +53,29 @@ const NavBar = () => {
 
 
     return (
-        <nav className={`${!scrolled && 'pt-2'} md:shadow-sm sticky top-0 bg-[#004B22]`}>
+        <nav className={`md:shadow-sm sticky z-50 top-0 bg-[#004B22]`}>
 
             {/* desktop menu  */}
-            <section className={` container mx-auto px-2  flex justify-between items-center ${scrolled && 'hidden'} text-white`}>
+            <section className={` container mx-auto px-2  flex justify-between items-center ${scrolled && 'md:hidden'} text-white`}>
                 {/* nav Items  */}
 
                 <div className="flex justify-center items-center">
-                    <Link className=" " href="/">
+                    <Link className="" href="/">
                         <Image
                             src="/logo.svg"
                             alt="logo"
-                            width={0}
-                            height={0}
+                            width={80}
+                            height={80}
                             unoptimized
-                            style={{ height: '80px', width: "80px" }}
+
                         />
                     </Link>
 
+                    <div className="hidden md:block">
+                        <SearchBar />
+                    </div>
 
-
-                    <ul className="hidden lg:flex space-x-10 mx-10">
+                    <ul className="hidden lg:flex space-x-4">
                         <li>
                             <Link href="/find-meals">Find Meals</Link>
                         </li>
@@ -77,40 +83,31 @@ const NavBar = () => {
                         <li>
                             <Link href='/our-cehfs'>Our Chefs</Link>
                         </li>
-
-
-
-                        <li>
-                            {isMounted && user && (
-                                <Link href={user.role === 'mealProvider' ? '/dashboard/provider' : '/dashboard/customer'}>
-                                    Dashboard
-                                </Link>
-                            )}
-                        </li>
                         <li>
                             <Link href={"about-us"}>About Us</Link>
                         </li>
-
+                        <li>
+                            {isMounted && user ? (
+                                <Link href={user.role === 'mealProvider' ? '/dashboard/provider' : '/dashboard/customer'}>
+                                    Dashboard
+                                </Link>
+                            ) : (<div className="w-16"></div>)}
+                        </li>
                     </ul>
                 </div>
 
 
                 {/* search and Login  */}
-                <div className="hidden lg:block">
+                <div className="hidden lg:flex justify-center items-center space-x-6">
                     {isMounted && user ? (
                         <DropdownMenu>
-                            <DropdownMenuTrigger>
-                                <Avatar>
-                                    <AvatarImage src="https://github.com/shadcn.png" />
-                                    <AvatarFallback>Profile</AvatarFallback>
-                                </Avatar>
+                            <DropdownMenuTrigger className="rounded-full">
+                                <Image src={avatar} alt="avatar" height={30} width={30} className="rounded-full" />
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem><Link href={user?.role === 'mealProvider' ? '/profile/provider' : '/profile/customer'}>Profile</Link></DropdownMenuItem>
-                                <DropdownMenuItem>Billing</DropdownMenuItem>
-                                <DropdownMenuItem>Team</DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem>
                                     <button onClick={handleLogOut} className="bg-red-800 px-6 pt-1 pb-2 rounded-3xl ml-2 text-white cursor-pointer">Logout</button>
@@ -118,17 +115,15 @@ const NavBar = () => {
                             </DropdownMenuContent>
                         </DropdownMenu>
                     ) : (
-                        <Link
-                            href="/login"
-                            className="bg-green-800 px-6 pt-1 pb-2 
-                    rounded-3xl 
-                    ml-2
-                    text-white"
-                        >
-                            Sign In/Sign Up
-                        </Link>
+                        <span
+
+                            className="text-white">
+                            <Link href='/login'>Login</Link> | <Link href='/register'>Register</Link>
+                        </span>
                     )}
+                    <Link className="mr-1 text-12px flex items-center justify-center " href="/"><span className="relative -top-4 left-4 text-red-200 text-lg font-bold  ">{cart.length + 1}</span><FaCartShopping size={20} /> cart</Link>
                 </div>
+
                 <button
                     className="lg:hidden cursor-pointer hover:bg-gray-300 rounded-md"
                     onClick={() => setOpen(!open)}
@@ -137,19 +132,14 @@ const NavBar = () => {
                 </button>
 
             </section>
-            <ul className={`flex justify-start items-center space-x-20 mt-1 bg-gray-200 py-2 px-16 ${scrolled && 'hidden'}`}>
-                <li>
-
-
-
-
-
-                </li>
-
-                <li>STANDARD</li>
-                <li>SUBSCRIPTION</li>
-                <li>PARTY MENU</li>
-                <li>DIET</li>
+            <ul className={`${scrolled ? 'hidden' : 'hidden md:flex justify-start items-center space-x-9'}  mt-1 bg-gray-200 py-2 pl-14`}>
+                {
+                    megaMenu.map((item: string) => (
+                        <li key={item}>
+                            <Link href={`/find-meals?category=${item.toLowerCase()}`}>{item}</Link>
+                        </li>
+                    ))
+                }
             </ul>
 
             {/* mobile menu  */}
@@ -198,9 +188,6 @@ const NavBar = () => {
                                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                         <DropdownMenuSeparator />
                                         <DropdownMenuItem>Profile</DropdownMenuItem>
-                                        <DropdownMenuItem>Billing</DropdownMenuItem>
-                                        <DropdownMenuItem>Team</DropdownMenuItem>
-                                        <DropdownMenuItem>Subscription</DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             ) : (
@@ -216,20 +203,21 @@ const NavBar = () => {
                 </section>
             )}
             {scrolled && (
-                <section className="bg-[#004B22] py-2 px-16 animate-in slide-in-from-top transition-all duration-500">
-
-                    <ul className="flex justify-start items-center space-x-24 text-white">
-                        <li>meal</li>
-                        <li>meal</li>
-                        <li>meal</li>
-                        <li>meal</li>
-                        <li>meal</li>
-                        <li>meal</li>
-                        <li>meal</li>
-                        <li>meal</li>
-                        <li>meal</li>
-                        <li>meal</li>
-                    </ul>
+                <section className="hidden md:block bg-[#004B22] py-2 pl-16 animate-in slide-in-from-top transition-all duration-500"><ul className="flex justify-start items-center space-x-9 text-white">
+                    <li>Keto</li>
+                    <li>Vegan</li>
+                    <li>Vegetarian</li>
+                    <li>Gluten-Free</li>
+                    <li>Low-Carb</li>
+                    <li>High-Protein</li>
+                    <li>Paleo</li>
+                    <li>Diabetic-Friendly</li>
+                    <li>Dairy-Free</li>
+                    <li>Organic</li>
+                    <li>Low-Fat</li>
+                    <li>Heart-Healthy</li>
+                    <Link className="mr-1 text-12px flex items-center justify-center " href="/"><span className="relative -top-4 left-4 text-red-200 text-lg font-bold  ">{cart.length + 1}</span><FaCartShopping size={20} /> cart</Link>
+                </ul>
                 </section>
             )}
         </nav>

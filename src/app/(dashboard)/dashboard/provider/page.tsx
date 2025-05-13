@@ -1,23 +1,11 @@
 "use client"
 import { selectCurrentUser } from "@/redux/features/auth/authSlice";
-
 import { useAppSelector } from "@/redux/hooks";
 import { DecodedUser } from "@/types/auth.types";
-import {
-    Card,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { useGetMyMealProviderQuery } from "@/redux/features/mealProviders/mealProvidersApi";
-import { IMeal } from "@/types/meal";
 import { useGetAllMealQuery } from "@/redux/features/meals/mealApi";
 import { skipToken } from "@reduxjs/toolkit/query";
-
+import { PieChart, Pie, Cell, PieLabelRenderProps } from 'recharts';
 const ProviderDashboard = () => {
     const userInfo = useAppSelector(selectCurrentUser) as DecodedUser;
     const { data: providerData } = useGetMyMealProviderQuery(userInfo?.id)
@@ -25,37 +13,73 @@ const ProviderDashboard = () => {
     console.log(id);
     const { data: mealData } = useGetAllMealQuery(id ? [{ name: 'providerId', value: id }] : skipToken)
     console.log(mealData);
+    const data = [
+        { name: 'Group A', value: 400 },
+        { name: 'Group B', value: 300 },
+        { name: 'Group C', value: 300 },
+        { name: 'Group D', value: 200 },
+    ];
+    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+    const RADIAN = Math.PI / 180;
+    const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: PieLabelRenderProps) => {
+        const radius = Number(innerRadius) + (Number(outerRadius) - Number(innerRadius)) * 0.5;
+        const x = Number(cx) + radius * Math.cos(-midAngle * RADIAN);
+        const y = Number(cy) + radius * Math.sin(-midAngle * RADIAN);
+
+        return (
+            <text x={x} y={y} fill="white" textAnchor={x > Number(cx) ? 'start' : 'end'} dominantBaseline="central">
+                {`${((percent ?? 0) * 100).toFixed(0)}%`}
+            </text>
+        );
+    };
     return (
         <div>
-            <h1 className="text-3xl text-green-900 text-center font-bold mt-6 mb-10">Meals You Offered</h1>
+            <h1 className="text-3xl text-green-900 text-center font-bold mt-6 mb-10">Meal Provider Dashboard</h1>
             <div className="grid md:grid-cols-3 gap-4 px-6">
+                <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-md shadow-gray-400 p-6">
+                    <div className=" flex justify-between w-full">
+                        <h4 className="text-gray-500 dark:text-gray-400 text-sm font-medium">Total Orders</h4>
+                        <p className="text-3xl font-semibold text-gray-900 dark:text-white mt-2">1,234</p>
 
-                {mealData?.data?.map((item: IMeal) => (
-                    <Card key={item?._id} className=" py-2 px-2">
-                        <CardHeader>
-                            <Image
-                                src={item?.image}
-                                alt="meal image"
-                                width={0}
-                                height={0}
-                                unoptimized
-                                priority
-                                sizes="100vw"
-                                className="rounded-md w-[320px]  h-auto"
-                            />
-                            <CardTitle className="my-2 text-green-900">{item?.title}</CardTitle>
-                            <CardDescription className="text-md text-green-900">Price:{item?.price}</CardDescription>
-                            <CardDescription className="text-md text-green-900">Category: {item?.category}</CardDescription>
-                            <CardDescription className="text-md text-green-900">Prepear Time: {item?.preparationTime}</CardDescription>
-                            <CardDescription className="text-md text-green-900">Is Available: {item.isAvailable ? 'Yes' : 'No'}</CardDescription>
-                        </CardHeader>
+                    </div>
+                    <PieChart width={200} height={200} className="mx-auto">
+                        <Pie
+                            data={data}
+                            cx="50%"
+                            cy="50%"
+                            labelLine={false}
+                            label={renderCustomizedLabel}
+                            outerRadius={80}
+                            fill="#8884d8"
+                            dataKey="value"
+                        >
+                            {data.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                            ))}
+                        </Pie>
+                    </PieChart>
+                </div>
+                <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-md shadow-gray-400 p-6 flex flex-col justify-between w-full max-w-xs">
+                    <h4 className="text-gray-500 dark:text-gray-400 text-sm font-medium">Total Revenue</h4>
+                    <p className="text-3xl font-semibold text-gray-900 dark:text-white mt-2">1,234</p>
+                </div>
+                <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-md shadow-gray-400 p-6 flex flex-col justify-between w-full max-w-xs">
+                    <h4 className="text-gray-500 dark:text-gray-400 text-sm font-medium">Completed Orders</h4>
+                    <p className="text-3xl font-semibold text-gray-900 dark:text-white mt-2">1,234</p>
+                </div>
+                <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-md shadow-gray-400 p-6 flex flex-col justify-between w-full max-w-xs">
+                    <h4 className="text-gray-500 dark:text-gray-400 text-sm font-medium">Average Order Value</h4>
+                    <p className="text-3xl font-semibold text-gray-900 dark:text-white mt-2">1,234</p>
+                </div>
+                <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-md shadow-gray-400 p-6 flex flex-col justify-between w-full max-w-xs">
+                    <h4 className="text-gray-500 dark:text-gray-400 text-sm font-medium">Average Meal Rating</h4>
+                    <p className="text-3xl font-semibold text-gray-900 dark:text-white mt-2">1,234</p>
+                </div>
+                <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-md shadow-gray-400 p-6 flex flex-col justify-between w-full max-w-xs">
+                    <h4 className="text-gray-500 dark:text-gray-400 text-sm font-medium">Total Customers</h4>
+                    <p className="text-3xl font-semibold text-gray-900 dark:text-white mt-2">1,234</p>
+                </div>
 
-                        <CardFooter className="mx-0 px-0 flex justify-between items-center">
-                            <Button className="w-12/12"><Link href={`/dashboard/provider/update-meal/${item?._id}`}>View Details</Link></Button>
-                        </CardFooter>
-                    </Card>
-                ))
-                }
 
 
             </div>

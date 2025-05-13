@@ -6,6 +6,7 @@ import FindMeal from "@/components/findMeals/FindMeals"
 //               
 //                         
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 // meta data for find meal page 
 export const generateMetadata = async (): Promise<Metadata> => {
@@ -33,9 +34,9 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 const FindMealPage = async () => {
     return (
-        <>
+        <Suspense fallback={<div className="text-center py-10">Loading meals...</div>}>
             <FindMeal />
-        </>
+        </Suspense>
     )
 }
 
